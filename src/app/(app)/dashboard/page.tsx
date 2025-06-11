@@ -125,7 +125,7 @@ export default function DashboardPage() {
   return (
     <div className="flex flex-col gap-8 p-4 md:p-6 min-h-screen">
       <div className="flex items-center justify-between">
-        <h1 className="font-headline text-4xl font-bold text-foreground">API Sentinel Dashboard</h1>
+        <h1 className="font-headline text-4xl font-bold text-foreground">Aran Dashboard</h1>
         <Button variant="default" className="shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-lg">
           <SlidersHorizontal className="mr-2 h-5 w-5"/> Customize View
         </Button>

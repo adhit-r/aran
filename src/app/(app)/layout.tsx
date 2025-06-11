@@ -31,7 +31,7 @@ export default function AppLayout({ children }: PropsWithChildren) {
               <ShieldHalf size={28} />
             </Button>
             <h1 className="font-headline text-xl font-semibold text-sidebar-foreground group-data-[collapsible=icon]:hidden">
-              API Sentinel
+              Aran
             </h1>
           </div>
         </SidebarHeader>
@@ -53,7 +53,7 @@ export default function AppLayout({ children }: PropsWithChildren) {
             </Avatar>
             <div className="flex flex-col group-data-[collapsible=icon]:hidden">
               <span className="text-sm font-medium text-sidebar-foreground">Admin User</span>
-              <span className="text-xs text-muted-foreground">admin@apisentinel.com</span>
+              <span className="text-xs text-muted-foreground">admin@aran.com</span>
             </div>
           </div>
         </SidebarFooter>

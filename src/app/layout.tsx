@@ -3,7 +3,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: 'API Sentinel',
+  title: 'Aran',
   description: 'API Security, Governance, Catalog, and Discovery Tool',
   icons: null,
 };

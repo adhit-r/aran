@@ -1,4 +1,4 @@
-# Firebase Studio
+# Aran
 
 This is a NextJS starter in Firebase Studio.
 
