@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -45,20 +46,17 @@ export function SidebarNav() {
         const isActive = pathname === item.href || (pathname.startsWith(item.href) && item.href !== "/");
         return (
           <SidebarMenuItem key={item.label}>
-            <Link href={item.href} passHref legacyBehavior>
+            <Link href={item.href}>
               <SidebarMenuButton
-                asChild
                 isActive={isActive}
                 tooltip={item.label}
                 className={cn(item.soon && "cursor-not-allowed opacity-50")}
               >
-                <a> {/* Link component needs an anchor tag as child when asChild is used this way in older Next versions, or wrap SidebarMenuButton in Link directly */}
-                  <Icon />
-                  <span>{item.label}</span>
-                  {item.soon && (
-                    <span className="ml-auto text-xs text-muted-foreground">Soon</span>
-                  )}
-                </a>
+                <Icon />
+                <span>{item.label}</span>
+                {item.soon && (
+                  <span className="ml-auto text-xs text-muted-foreground">Soon</span>
+                )}
               </SidebarMenuButton>
             </Link>
           </SidebarMenuItem>

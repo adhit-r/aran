@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 export const metadata: Metadata = {
   title: 'API Sentinel',
   description: 'API Security, Governance, Catalog, and Discovery Tool',
+  icons: null, // Explicitly prevent Next.js from auto-discovering/processing local icon files
 };
 
 export default function RootLayout({
