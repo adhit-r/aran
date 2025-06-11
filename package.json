@@ -9,6 +9,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+ "dev": "next dev",
+  "build": "next build",
+  "export": "next export",
+  "start": "next start",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
