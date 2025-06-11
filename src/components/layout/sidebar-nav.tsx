@@ -49,8 +49,11 @@ export function SidebarNav() {
 
         const baseClasses = "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ease-in-out text-sidebar-foreground group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:gap-0";
         
-        const activeClasses = "bg-primary text-primary-foreground font-semibold ring-1 ring-primary/40 ring-offset-1 ring-offset-[hsl(var(--sidebar-background-opaque))] hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
-        const inactiveClasses = "hover:bg-primary/10 hover:text-primary focus-visible:bg-primary/10 focus-visible:text-primary focus-visible:ring-1 focus-visible:ring-primary/30 focus-visible:ring-offset-1 focus-visible:ring-offset-[hsl(var(--sidebar-background-opaque))]";
+        // Updated activeClasses to use accent color
+        const activeClasses = "bg-accent text-accent-foreground font-semibold ring-1 ring-accent/40 ring-offset-1 ring-offset-[hsl(var(--sidebar-background-opaque))] hover:bg-accent/90 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
+        
+        // Updated inactiveClasses hover and focus to use accent color
+        const inactiveClasses = "hover:bg-accent/10 hover:text-accent focus-visible:bg-accent/10 focus-visible:text-accent focus-visible:ring-1 focus-visible:ring-accent/30 focus-visible:ring-offset-1 focus-visible:ring-offset-[hsl(var(--sidebar-background-opaque))]";
         
         const buttonClassName = cn(
           baseClasses,
@@ -79,4 +82,3 @@ export function SidebarNav() {
     </SidebarMenu>
   );
 }
-
