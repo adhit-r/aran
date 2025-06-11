@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Loader2, ShieldAlert, ShieldCheck, AlertCircle } from "lucide-react";
+import { Loader2, ShieldAlert, ShieldCheck, AlertCircle, Info } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 function SubmitButton() {
@@ -54,6 +54,17 @@ export default function ThreatDetectionPage() {
       <p className="text-muted-foreground">
         Analyze API traffic patterns to identify unusual behavior and potential security threats.
       </p>
+
+      <Alert variant="default" className="bg-blue-900/20 border-blue-700 text-blue-300 [&>svg]:text-blue-400">
+        <Info className="h-4 w-4" />
+        <AlertTitle>Data Privacy Notice</AlertTitle>
+        <AlertDescription>
+          If your API request/response data contains PII, CPNI, or other sensitive information, 
+          ensure it is appropriately masked or redacted <strong className="font-semibold">before submission</strong>. 
+          This application sends the provided data to an AI model for analysis. 
+          Properly sanitizing sensitive data is crucial for compliance with data privacy regulations.
+        </AlertDescription>
+      </Alert>
 
       <div className="grid md:grid-cols-2 gap-6">
         <Card className="md:col-span-1">

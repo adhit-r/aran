@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -15,7 +16,7 @@ const DiscoverApisInputSchema = z.object({
   trafficData: z
     .string()
     .describe(
-      'API traffic data, including endpoint URLs, request/response structures, and security protocols.'
+      'API traffic data, including endpoint URLs, request/response structures (which may be pre-processed/redacted for sensitive information like PII/CPNI), and security protocols.'
     ),
 });
 export type DiscoverApisInput = z.infer<typeof DiscoverApisInputSchema>;
@@ -43,6 +44,8 @@ const discoverApisPrompt = ai.definePrompt({
   input: {schema: DiscoverApisInputSchema},
   output: {schema: DiscoverApisOutputSchema},
   prompt: `You are an expert API discovery tool. Analyze the provided API traffic data to identify and categorize APIs.
+
+Important: The provided traffic data, especially request/response structures, may have been pre-processed to remove or mask sensitive information (e.g., PII, CPNI) for privacy and compliance reasons. Focus your discovery on API structures, endpoints, and protocols based on the available data.
 
 Traffic Data:
 {{{trafficData}}}

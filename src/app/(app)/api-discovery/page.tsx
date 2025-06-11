@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from "react";
@@ -8,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Loader2, Terminal } from "lucide-react";
+import { Loader2, Terminal, Info } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -46,6 +47,17 @@ export default function ApiDiscoveryPage() {
       <p className="text-muted-foreground">
         Automatically discover and categorize APIs based on traffic and patterns. Paste your API traffic data below.
       </p>
+
+       <Alert variant="default" className="bg-blue-900/20 border-blue-700 text-blue-300 [&>svg]:text-blue-400">
+        <Info className="h-4 w-4" />
+        <AlertTitle>Data Privacy Notice</AlertTitle>
+        <AlertDescription>
+          If your API traffic data (e.g., logs, HAR files) contains PII, CPNI, or other sensitive information within 
+          request/response payloads, ensure it is appropriately masked or redacted <strong className="font-semibold">before submission</strong>. 
+          This application sends the provided data to an AI model for analysis. 
+          Properly sanitizing sensitive data is crucial for compliance with data privacy regulations.
+        </AlertDescription>
+      </Alert>
 
       <Card>
         <CardHeader>

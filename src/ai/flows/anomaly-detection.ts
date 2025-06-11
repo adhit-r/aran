@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -13,8 +14,8 @@ import {z} from 'genkit';
 
 const DetectApiAnomalyInputSchema = z.object({
   apiEndpoint: z.string().describe('The API endpoint being monitored.'),
-  requestData: z.string().describe('The API request data in JSON format.'),
-  responseData: z.string().describe('The API response data in JSON format.'),
+  requestData: z.string().describe('The API request data in JSON format. This data may be raw or pre-processed (e.g., redacted/masked for sensitive information like PII/CPNI).'),
+  responseData: z.string().describe('The API response data in JSON format. This data may be raw or pre-processed (e.g., redacted/masked for sensitive information like PII/CPNI).'),
   responseTime: z.number().describe('The API response time in milliseconds.'),
   trafficVolume: z.number().describe('The number of requests to the API endpoint in the last minute.'),
   userRoles: z.array(z.string()).describe('Roles of the user making the API call.'),
@@ -50,6 +51,8 @@ You will use this information to determine if the API traffic is anomalous. You 
 
 Based on the anomaly detected, provide suggested actions to take in response to the anomaly.
 
+Important: The provided request and response data may have been pre-processed to remove or mask sensitive information (e.g., PII, CPNI) for privacy and compliance reasons. Analyze based on the structure, patterns, and available data.
+
 API Endpoint: {{{apiEndpoint}}}
 Request Data: {{{requestData}}}
 Response Data: {{{responseData}}}
@@ -58,7 +61,7 @@ Traffic Volume: {{{trafficVolume}}}
 User Roles: {{#each userRoles}}{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}
 
 Consider the following factors when determining if the traffic is anomalous:
-- Unusual request or response data
+- Unusual request or response data (considering potential redaction)
 - Unexpected response time
 - Abnormal traffic volume
 - Suspicious user roles
