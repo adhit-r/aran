@@ -1,4 +1,4 @@
-name: Deploy Next.js site to Pages
+name: Deploy Next.js site to GitHub Pages
 
 on:
   push:
@@ -17,6 +17,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -40,25 +41,19 @@ jobs:
           node-version: "20"
           cache: ${{ steps.detect-package-manager.outputs.manager }}
 
+      - name: Set environment for GitHub Pages base path
+        run: echo "NEXT_PUBLIC_BASE_PATH=/${{ github.event.repository.name }}" >> $GITHUB_ENV
+
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
 
-      - name: Set NEXT_PUBLIC_BASE_PATH for GitHub Pages
-        run: echo "NEXT_PUBLIC_BASE_PATH=/${{ github.event.repository.name }}" >> $GITHUB_ENV
+      - name: Build Next.js project
+        run: ${{ steps.detect-package-manager.outputs.runner }} next build
 
-      - name: Patch next.config.js for export (if needed)
-        run: |
-          if [ -f next.config.js ]; then
-            echo "module.exports = { output: 'export', basePath: '/${{ github.event.repository.name }}', images: { unoptimized: true } };" > next.config.js
-          fi
-
-      - name: Build Next.js static site
-        run: ${{ steps.detect-package-manager.outputs.runner }} next build && ${{ steps.detect-package-manager.outputs.runner }} next export
-
-      - name: Upload artifact
+      - name: Upload build output to GitHub Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: out
+          path: ./out
 
   deploy:
     environment:
