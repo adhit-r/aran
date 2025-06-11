@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from "react";
@@ -9,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Loader2, Terminal, ShieldAlert, ShieldCheck, AlertCircle } from "lucide-react";
+import { Loader2, ShieldAlert, ShieldCheck, AlertCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 function SubmitButton() {
@@ -40,8 +41,8 @@ export default function ThreatDetectionPage() {
   
   const getThreatLevelBadgeVariant = (threatLevel?: 'low' | 'medium' | 'high') => {
     switch (threatLevel) {
-      case 'low': return 'default'; // Using primary for low, could be secondary
-      case 'medium': return 'secondary'; // Yellowish in some themes
+      case 'low': return 'default'; 
+      case 'medium': return 'secondary'; 
       case 'high': return 'destructive';
       default: return 'outline';
     }
@@ -66,34 +67,70 @@ export default function ThreatDetectionPage() {
             <form ref={formRef} action={formAction} className="space-y-4">
               <div>
                 <Label htmlFor="apiEndpoint">API Endpoint</Label>
-                <Input id="apiEndpoint" name="apiEndpoint" placeholder="/v1/users/123" />
+                <Input 
+                  id="apiEndpoint" 
+                  name="apiEndpoint" 
+                  placeholder="/v1/users/123" 
+                  defaultValue="https://jsonplaceholder.typicode.com/posts/1" 
+                />
                 {getErrorForField("apiEndpoint") && <p className="text-sm text-destructive mt-1">{getErrorForField("apiEndpoint")}</p>}
               </div>
               <div>
                 <Label htmlFor="requestData">Request Data (JSON)</Label>
-                <Textarea id="requestData" name="requestData" rows={3} placeholder='{ "action": "update", "value": "example" }' className="font-code" />
+                <Textarea 
+                  id="requestData" 
+                  name="requestData" 
+                  rows={3} 
+                  placeholder='{ "action": "update", "value": "example" }' 
+                  className="font-code"
+                  defaultValue='{}'
+                />
                 {getErrorForField("requestData") && <p className="text-sm text-destructive mt-1">{getErrorForField("requestData")}</p>}
               </div>
               <div>
                 <Label htmlFor="responseData">Response Data (JSON)</Label>
-                <Textarea id="responseData" name="responseData" rows={3} placeholder='{ "status": "success", "id": "123" }' className="font-code" />
+                <Textarea 
+                  id="responseData" 
+                  name="responseData" 
+                  rows={3} 
+                  placeholder='{ "status": "success", "id": "123" }' 
+                  className="font-code"
+                  defaultValue='{ "userId": 1, "id": 1, "title": "sunt aut facere ...", "body": "quia et suscipit ..." }'
+                />
                 {getErrorForField("responseData") && <p className="text-sm text-destructive mt-1">{getErrorForField("responseData")}</p>}
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="responseTime">Response Time (ms)</Label>
-                  <Input id="responseTime" name="responseTime" type="number" placeholder="150" />
+                  <Input 
+                    id="responseTime" 
+                    name="responseTime" 
+                    type="number" 
+                    placeholder="150" 
+                    defaultValue="80"
+                  />
                   {getErrorForField("responseTime") && <p className="text-sm text-destructive mt-1">{getErrorForField("responseTime")}</p>}
                 </div>
                 <div>
                   <Label htmlFor="trafficVolume">Traffic Volume (reqs/min)</Label>
-                  <Input id="trafficVolume" name="trafficVolume" type="number" placeholder="60" />
+                  <Input 
+                    id="trafficVolume" 
+                    name="trafficVolume" 
+                    type="number" 
+                    placeholder="60" 
+                    defaultValue="10"
+                  />
                   {getErrorForField("trafficVolume") && <p className="text-sm text-destructive mt-1">{getErrorForField("trafficVolume")}</p>}
                 </div>
               </div>
               <div>
                 <Label htmlFor="userRoles">User Roles (comma-separated)</Label>
-                <Input id="userRoles" name="userRoles" placeholder="user, editor" />
+                <Input 
+                  id="userRoles" 
+                  name="userRoles" 
+                  placeholder="user, editor" 
+                  defaultValue="public_user"
+                />
                  {getErrorForField("userRoles") && <p className="text-sm text-destructive mt-1">{getErrorForField("userRoles")}</p>}
               </div>
               <SubmitButton />

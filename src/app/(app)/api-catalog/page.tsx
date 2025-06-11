@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from "react";
@@ -36,10 +37,42 @@ interface ApiEntry {
 }
 
 const initialApis: ApiEntry[] = [
-  { id: "1", name: "User Service", endpoint: "/v1/users", category: "Core Services", owner: "Auth Team", status: "active", documentationUrl: "/docs/user-service" },
-  { id: "2", name: "Product Catalog API", endpoint: "/v2/products", category: "E-commerce", owner: "Product Team", status: "active", documentationUrl: "/docs/product-catalog" },
-  { id: "3", name: "Order Management", endpoint: "/v1/orders", category: "E-commerce", owner: "Order Team", status: "development", documentationUrl: "/docs/order-management" },
-  { id: "4", name: "Legacy Payment Gateway", endpoint: "/v0/payment", category: "Finance", owner: "Finance Team", status: "deprecated", documentationUrl: "/docs/legacy-payment" },
+  { 
+    id: "1", 
+    name: "JSONPlaceholder API", 
+    endpoint: "https://jsonplaceholder.typicode.com/posts", 
+    category: "Mock Data/Testing", 
+    owner: "Public", 
+    status: "active", 
+    documentationUrl: "https://jsonplaceholder.typicode.com/" 
+  },
+  { 
+    id: "2", 
+    name: "OpenWeatherMap API", 
+    endpoint: "https://api.openweathermap.org/data/2.5/weather", 
+    category: "Weather", 
+    owner: "OpenWeatherMap", 
+    status: "active", 
+    documentationUrl: "https://openweathermap.org/api" 
+  },
+  { 
+    id: "3", 
+    name: "The Cat API", 
+    endpoint: "https://api.thecatapi.com/v1/images/search", 
+    category: "Animals/Entertainment", 
+    owner: "TheCatAPI", 
+    status: "active", 
+    documentationUrl: "https://docs.thecatapi.com/" 
+  },
+  { 
+    id: "4", 
+    name: "Public APIs List", 
+    endpoint: "https://api.publicapis.org/entries", 
+    category: "API Directory", 
+    owner: "Public APIs GitHub", 
+    status: "active", 
+    documentationUrl: "https://github.com/public-apis/public-apis"
+  },
 ];
 
 export default function ApiCatalogPage() {
@@ -85,7 +118,7 @@ export default function ApiCatalogPage() {
 
   const getStatusBadgeVariant = (status: ApiEntry["status"]) => {
     switch (status) {
-      case "active": return "default"; // Using primary color
+      case "active": return "default"; 
       case "deprecated": return "destructive";
       case "development": return "secondary";
       default: return "outline";
