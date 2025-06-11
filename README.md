@@ -6,7 +6,7 @@ To get started, take a look at src/app/page.tsx.
 
 ## 📄 Documentation
 
-Comprehensive documentation for Aran API Sentinel is available on our Docusaurus-powered site, located within the `docs/website` directory of this repository. This site includes:
+Comprehensive documentation for Aran API Sentinel is available on our Docusaurus-powered site, located in the `docs/website` directory. This site includes:
 
 *   **Product Information**: An overview of Aran API Sentinel, its architecture, and core value propositions.
 *   **Feature Guides**: Detailed explanations of all major features. Explore guides on:
@@ -14,31 +14,28 @@ Comprehensive documentation for Aran API Sentinel is available on our Docusaurus
     *   Configuring Threat Detection parameters
     *   Setting up Security Policies
     *   Managing Access Control (RBAC)
-    *   Understanding the MCP (Mission Critical Process) Catalog
-    *   And more as the platform evolves...
-*   **Technical Documentation**: Setup information (primarily for platform usage), workflow diagrams illustrating key processes, and (in the future) API references for programmatic interactions.
+    *   Understanding the MCP Catalog
+    *   And more...
+*   **Technical Documentation**: Setup information, workflow diagrams, and future API references.
 
 **Accessing the Documentation:**
 
-*   **Live Site (Once Deployed via GitHub Pages)**:
-    The documentation will be available at `https://YOUR_GITHUB_USERNAME.github.io/YOUR_REPOSITORY_NAME/` (Note: Please replace `YOUR_GITHUB_USERNAME` and `YOUR_REPOSITORY_NAME` with your actual GitHub username/organization and repository name after the first successful deployment. The exact URL might also vary if a custom domain is configured or if it's a user/organization page vs. a project page).
-
-*   **Local Development / Viewing**:
-    To view the documentation site locally:
-    1.  Navigate to the Docusaurus project directory in your terminal:
+*   **Live Site (Once Deployed)**: The live documentation will be available at `https://YOUR_GITHUB_USERNAME.github.io/YOUR_REPOSITORY_NAME/` (Please update this URL after the first deployment via GitHub Pages, ensuring the path reflects your GitHub Pages configuration, e.g., it might include the Docusaurus site's `baseUrl` if not deploying to a root).
+*   **Local Development**:
+    1.  Navigate to the `docs/website` directory in your terminal:
         ```bash
         cd docs/website
         ```
-    2.  Install the necessary dependencies (if you haven't done so already for this subdirectory):
+    2.  Install dependencies (if you haven't already):
         ```bash
         npm install
         ```
-        (or `yarn install` if you are using Yarn)
+        (or `yarn install` if you prefer Yarn)
     3.  Start the Docusaurus development server:
         ```bash
         npm run start
         ```
         (or `yarn start`)
-    4.  Open the site in your browser, typically at `http://localhost:3000` (Docusaurus will indicate the exact port in the terminal if 3000 is unavailable).
+    4.  Open the site in your browser, typically at `http://localhost:3000`.
 
-We encourage you to explore the documentation site for a complete understanding of Aran API Sentinel's capabilities and how to leverage them effectively.
+We encourage you to explore the documentation site for a complete understanding of Aran API Sentinel.
