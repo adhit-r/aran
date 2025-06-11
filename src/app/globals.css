@@ -8,18 +8,16 @@
     --background: 220 60% 98%; /* Very Light Cool Gray */
     --foreground: 220 25% 25%; /* Dark Slate Blue */
 
-    /* Card styling will be more direct via Tailwind for glassmorphism (e.g. bg-opacity, backdrop-blur) */
-    /* So, --card and --card-foreground will be more standard for opaque fallbacks or other elements. */
-    --card: 220 60% 96%; /* Lightened background for opaque cards */
+    --card: 220 60% 96%; 
     --card-foreground: 220 25% 25%;
 
-    --popover: 0 0% 100%; /* White for popovers, can add glass effects too if needed */
+    --popover: 0 0% 100%; 
     --popover-foreground: 220 25% 25%;
 
     --primary: 210 90% 58%; /* Vibrant, modern Blue */
     --primary-foreground: 0 0% 100%; /* White */
 
-    --secondary: 200 50% 93%; /* Lighter, softer Blue */
+    --secondary: 200 50% 93%; 
     --secondary-foreground: 210 30% 40%; 
 
     --muted: 220 30% 94%; 
@@ -28,43 +26,41 @@
     --accent: 290 70% 60%; /* Vibrant Purple/Magenta as an accent */
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 75% 58%; /* Clear Red */
+    --destructive: 0 75% 58%; 
     --destructive-foreground: 0 0% 100%;
-
-    /* Borders for glassmorphic elements might be lighter/more transparent */
-    --border: 220 30% 90%; /* Default border */
-    --glass-border: 0 0% 100% / 0.2; /* For glass elements: white with low opacity */
+    
+    --border: 220 30% 90%; 
+    --glass-border: 0 0% 100% / 0.2; 
     
     --input: 220 40% 95%; 
     --input-border: 220 30% 88%;
-    --ring: 210 90% 60%; /* Match Primary */
+    --ring: 210 90% 60%; 
 
     --chart-1: 210 90% 58%; 
-    --chart-2: 170 70% 45%; /* Teal */
-    --chart-3: 290 70% 60%; /* Accent Purple */
-    --chart-4: 35 90% 60%;  /* Orange */
-    --chart-5: 0 75% 58%;   /* Destructive Red */
+    --chart-2: 170 70% 45%; 
+    --chart-3: 290 70% 60%; 
+    --chart-4: 35 90% 60%;  
+    --chart-5: 0 75% 58%;   
 
-    --radius: 0.75rem; /* Slightly larger radius for a softer, modern look */
+    --radius: 0.75rem; 
 
     /* Sidebar specific theme variables */
-    /* For glassmorphic sidebar, background might be semi-transparent */
-    --sidebar-background: 220 60% 98% / 0.8; /* Light background with some transparency */
-    --sidebar-background-opaque: 220 60% 98%; /* Opaque version for text contrast */
-    --sidebar-foreground: 220 25% 25%; 
+    --sidebar-background: 220 60% 98% / 0.75; /* Light background with good transparency for blur */
+    --sidebar-background-opaque: 220 60% 98%; 
+    --sidebar-foreground: 210 60% 45%; /* Updated: Thematic readable blue */
     --sidebar-primary: 210 90% 58%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 290 70% 60%;
+    --sidebar-accent: 290 70% 60%; 
     --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 0 0% 100% / 0.1; /* Very subtle border for sidebar if glass */
+    --sidebar-border: 210 80% 80% / 0.3; /* Updated: Light blueish, slightly more visible border */
     --sidebar-ring: 210 90% 60%;
   }
 
   .dark {
-    --background: 220 15% 10%; /* Darker, deep blue-gray */
+    --background: 220 15% 10%; 
     --foreground: 220 15% 88%; 
 
-    --card: 220 15% 15%; /* Darker card base for opaque cards */
+    --card: 220 15% 15%; 
     --card-foreground: 220 15% 88%;
 
     --popover: 220 15% 12%;
@@ -98,14 +94,14 @@
     --chart-4: 35 80% 65%;
     --chart-5: 0 70% 60%;
 
-    --sidebar-background: 220 15% 10% / 0.7; /* Dark background with transparency for sidebar */
-    --sidebar-background-opaque: 220 15% 10%;
-    --sidebar-foreground: 220 15% 88%;
+    --sidebar-background: 220 15% 12% / 0.7; /* Darker background with transparency for sidebar */
+    --sidebar-background-opaque: 220 15% 12%;
+    --sidebar-foreground: 210 60% 75%; /* Lighter, slightly desaturated blue for dark mode text */
     --sidebar-primary: 210 80% 65%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 290 65% 65%;
     --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 0 0% 100% / 0.05;
+    --sidebar-border: 210 30% 40% / 0.3; /* Updated: Muted blueish border for dark theme glass */
     --sidebar-ring: 210 80% 65%;
   }
 }
@@ -116,21 +112,18 @@
   }
   body {
     @apply bg-background text-foreground;
-    /* Optional: Add a subtle gradient or pattern background image here for glassmorphism to really shine */
-    /* background-image: linear-gradient(to bottom right, hsl(var(--background)) 70%, hsl(var(--secondary)) 130%); */
   }
 }
 
-/* Custom utility for frosted glass effect if needed, though Tailwind's backdrop-blur should work */
 .frosted-glass {
-  background-color: rgba(255, 255, 255, 0.1); /* Adjust alpha for desired transparency */
-  backdrop-filter: blur(10px); /* Adjust blur radius */
-  -webkit-backdrop-filter: blur(10px); /* For Safari */
-  border: 1px solid rgba(255, 255, 255, 0.15); /* Subtle border */
+  background-color: rgba(255, 255, 255, 0.1); 
+  backdrop-filter: blur(10px); 
+  -webkit-backdrop-filter: blur(10px); 
+  border: 1px solid rgba(255, 255, 255, 0.15); 
 }
 
 .dark .frosted-glass {
-  background-color: rgba(30, 30, 40, 0.2); /* Darker transparent background */
+  background-color: rgba(30, 30, 40, 0.2); 
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
