@@ -10,6 +10,7 @@ import {
   UsersRound,
   SearchCode,
   Siren,
+  Cpu, // Added for MCP Catalog
   type LucideIcon,
 } from "lucide-react";
 
@@ -30,6 +31,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/api-catalog", label: "API Catalog", icon: BookText },
+  { href: "/mcp-catalog", label: "MCP Catalog", icon: Cpu }, // New MCP Catalog item
   { href: "/security-policies", label: "Security Policies", icon: ShieldCheck },
   { href: "/access-control", label: "Access Control", icon: UsersRound },
   { href: "/api-discovery", label: "API Discovery", icon: SearchCode },
