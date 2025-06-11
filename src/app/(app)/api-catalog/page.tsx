@@ -1,6 +1,15 @@
 
 "use client";
 
+function sanitizeUrl(url: string): string {
+  try {
+    const parsedUrl = new URL(url, window.location.origin);
+    return parsedUrl.href;
+  } catch {
+    return ""; // Return an empty string for invalid URLs
+  }
+}
+
 import * as React from "react";
 import {
   Table,
@@ -104,7 +113,7 @@ export default function ApiCatalogPage() {
         category: newApiCategory,
         owner: newApiOwner,
         status: "development",
-        documentationUrl: newApiDocsUrl
+        documentationUrl: sanitizeUrl(newApiDocsUrl)
     };
     setApis([...apis, newApi]);
     setIsDialogOpen(false);
@@ -209,7 +218,7 @@ export default function ApiCatalogPage() {
                   </TableCell>
                   <TableCell>
                     <Button variant="link" size="sm" asChild className="p-0 h-auto">
-                      <a href={api.documentationUrl} target="_blank" rel="noopener noreferrer">
+                      <a href={sanitizeUrl(api.documentationUrl)} target="_blank" rel="noopener noreferrer">
                         View Docs <ExternalLink className="ml-1 h-3 w-3" />
                       </a>
                     </Button>
