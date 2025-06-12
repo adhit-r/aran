@@ -4,6 +4,49 @@ This is a NextJS starter in Firebase Studio.
 
 To get started, take a look at src/app/page.tsx.
 
+## 🚀 Running the Frontend
+
+To run the frontend development server, follow these steps:
+
+1.  **Install dependencies**: This command installs all the necessary packages for the frontend application.
+    ```bash
+    npm install
+    ```
+2.  **Start the Next.js development server**: This command starts the development server, usually on `http://localhost:3000`.
+    ```bash
+    npm run dev
+    ```
+    The Next.js development server supports hot reloading, so changes you make to the code will be reflected in your browser automatically.
+
+## 🧠 Running the Backend (AI Flows)
+
+Genkit flows are used to define and run the backend AI logic.
+
+To run the Genkit AI flows for development:
+This command starts the Genkit development environment, allowing you to test and run your AI flows locally. You can usually access the Genkit developer UI at `http://localhost:4000` to inspect flows and their execution.
+```bash
+npm run genkit:dev
+```
+
+For running with auto-reloading when file changes are detected:
+This command provides a convenient way to develop, as Genkit will automatically restart when you modify your flow definitions.
+```bash
+npm run genkit:watch
+```
+
+## 🏗️ System Architecture
+
+```mermaid
+graph TD
+    A[User] --> B(Next.js Frontend);
+    B --> C{Firebase};
+    C --> B;
+    B --> D[Genkit AI Flows];
+    D --> B;
+    D --> E[External AI Services];
+end
+```
+
 ## 📄 Documentation
 
 This project now includes a comprehensive documentation site built with Docusaurus, located in the `docs/website` directory. It contains:
