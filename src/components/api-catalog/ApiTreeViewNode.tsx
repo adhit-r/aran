@@ -1,106 +1,105 @@
+// src/components/api-catalog/ApiTreeViewNode.tsx
 import React from 'react';
-import { TreeNode } from '@/lib/api-tree-utils';
-import { ChevronRight, ChevronDown, FileText, Network, GitMerge } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { ChevronRight, ChevronDown, GitMerge, Network } from 'lucide-react'; // Using GitMerge for path segment
+import { TreeNode } from '@/lib/api-tree-utils'; // Adjusted import path
+import { Badge } from '@/components/ui/badge'; // For method display
+import { cn } from '@/lib/utils';
 
 interface ApiTreeViewNodeProps {
   node: TreeNode;
   level: number;
+  isExpanded: boolean;
+  isSelected: boolean;
   onToggleExpand: (nodeId: string) => void;
-  expandedNodeIds: Set<string>;
-  onApiSelect: (apiId: string, event: React.MouseEvent) => void;
-  selectedApiId?: string | null;
+  onNodeSelect: (node: TreeNode) => void; // Pass the whole node
 }
 
 const ApiTreeViewNode: React.FC<ApiTreeViewNodeProps> = ({
   node,
   level,
+  isExpanded,
+  isSelected,
   onToggleExpand,
-  expandedNodeIds,
-  onApiSelect,
-  selectedApiId,
+  onNodeSelect,
 }) => {
-  const isExpanded = expandedNodeIds.has(node.id);
   const hasChildren = node.children && node.children.length > 0;
   const isApi = !!node.apiId;
 
-  const handleToggle = (event: React.MouseEvent) => {
-    event.stopPropagation();
+  const handleNodeClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    // If it's an API node, select it.
+    // If it's a folder node (has children but not an API itself), toggle it.
+    // If it's an API node that also has children (e.g. methods as children), select it. Toggle is separate.
+    if (isApi) {
+      onNodeSelect(node);
+    } else if (hasChildren) {
+      onToggleExpand(node.id);
+    }
+  };
+
+  const handleChevronClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent node click when only toggling
     if (hasChildren) {
       onToggleExpand(node.id);
     }
   };
 
-  const handleSelect = (event: React.MouseEvent) => {
-    event.stopPropagation();
-    if (isApi) {
-      onApiSelect(node.apiId!, event);
-    } else if (hasChildren) {
-      onToggleExpand(node.id); // Also toggle if it's a folder-like node
-    }
-  };
-
-  const getMethodColor = (method?: string) => {
-    switch (method?.toUpperCase()) {
-      case 'GET': return 'bg-sky-600/80 hover:bg-sky-500/80 border-sky-500/50 text-white';
-      case 'POST': return 'bg-green-600/80 hover:bg-green-500/80 border-green-500/50 text-white';
-      case 'PUT': return 'bg-amber-600/80 hover:bg-amber-500/80 border-amber-500/50 text-white';
-      case 'DELETE': return 'bg-red-600/80 hover:bg-red-500/80 border-red-500/50 text-white';
-      case 'PATCH': return 'bg-purple-600/80 hover:bg-purple-500/80 border-purple-500/50 text-white';
-      default: return 'bg-gray-500/80 hover:bg-gray-400/80 border-gray-400/50 text-white';
-    }
-  };
-
-  const nodeIsSelected = isApi && selectedApiId === node.apiId;
+  const getMethodBadgeVariant = (method?: string) => {
+   switch (method?.toUpperCase()) {
+     case 'GET': return 'bg-green-600/20 text-green-700 border-green-600/40 hover:bg-green-600/30';
+     case 'POST': return 'bg-blue-600/20 text-blue-700 border-blue-600/40 hover:bg-blue-600/30';
+     case 'PUT': return 'bg-yellow-600/20 text-yellow-700 border-yellow-600/40 hover:bg-yellow-600/30';
+     case 'DELETE': return 'bg-red-600/20 text-red-700 border-red-600/40 hover:bg-red-600/30';
+     case 'PATCH': return 'bg-purple-600/20 text-purple-700 border-purple-600/40 hover:bg-purple-600/30';
+     default: return 'bg-gray-600/20 text-gray-700 border-gray-600/40 hover:bg-gray-600/30'; // More neutral default
+   }
+ };
 
   return (
-    <div>
+    <div className="flex flex-col"> {/* Use flex-col to stack node and its children */}
       <div
-        className={`flex items-center p-1.5 rounded-md cursor-pointer hover:bg-muted/60 ${nodeIsSelected ? 'bg-accent text-accent-foreground hover:bg-accent/90' : ''}`}
-        style={{ paddingLeft: `${level * 1.25 + 0.5}rem` }}
-        onClick={handleSelect}
+        className={cn(
+          "flex items-center py-1.5 px-2 rounded-md hover:bg-muted/50 cursor-pointer group", // Added group for potential hover effects on children
+          isSelected && isApi && "bg-accent text-accent-foreground hover:bg-accent/90"
+        )}
+        style={{ paddingLeft: `${level * 1.25 + 0.25}rem` }} // Adjusted base padding
+        onClick={handleNodeClick}
         title={node.fullPath}
       >
         {hasChildren ? (
-          <button
-            onClick={handleToggle} // Separate toggle handler for the chevron specifically
-            className="p-0.5 rounded-sm hover:bg-muted-foreground/20 focus:outline-none"
-            aria-label={isExpanded ? 'Collapse node' : 'Expand node'}
-          >
-            {isExpanded ? <ChevronDown size={16} className="mr-2" /> : <ChevronRight size={16} className="mr-2" />}
-          </button>
+          isExpanded ? (
+            <ChevronDown className="h-4 w-4 mr-2 shrink-0 cursor-pointer" onClick={handleChevronClick} />
+          ) : (
+            <ChevronRight className="h-4 w-4 mr-2 shrink-0 cursor-pointer" onClick={handleChevronClick}/>
+          )
         ) : (
-          // If it's an API endpoint without children, use FileText or Network icon instead of chevron space
-          isApi ? <Network size={16} className="mr-2 shrink-0 text-transparent" style={{ width: '20px' }} /> : <span style={{ width: '20px' }} className="mr-2 inline-block"></span>
+          <span className="w-4 mr-2 shrink-0"></span> // Placeholder for alignment if no children (leaf node)
         )}
 
-        {isApi ? (
-          <Network size={16} className={`mr-2 shrink-0 ${nodeIsSelected ? '' : 'text-primary'}`} />
-        ) : (
-          // If it has children but is not an API itself, it's a folder/path segment
-          hasChildren ? <GitMerge size={16} className="mr-2 text-muted-foreground/70 shrink-0" /> : <GitMerge size={16} className="mr-2 text-muted-foreground/50 shrink-0" /> // Leaf path segment
-        )}
+        {isApi ? <Network className="h-4 w-4 mr-2 shrink-0 text-blue-500" /> :
+                 (hasChildren ? <GitMerge className="h-4 w-4 mr-2 shrink-0 text-slate-500 transform rotate-90" /> : <span className="w-4 mr-2 shrink-0"></span>) // GitMerge for folders, space for leaf path segments
+        }
 
-        <span className={`truncate select-none ${isApi ? 'font-medium' : 'text-sm text-muted-foreground'}`}>
-          {node.apiName || node.name} {/* Display apiName if available (for leaf API nodes), otherwise segment name */}
+        <span className={cn("truncate flex-grow select-none", isApi ? "font-medium" : "text-sm text-muted-foreground")}>
+            {node.name}
         </span>
         {isApi && node.method && (
-           <Badge variant="outline" className={`ml-2 text-xs px-1.5 py-0.5 ${getMethodColor(node.method)} ${nodeIsSelected ? 'border-accent-foreground/50' : ''}`}>
+          <Badge variant="outline" className={cn("ml-2 text-xs px-1.5 py-0.5 font-mono", getMethodBadgeVariant(node.method))}>
             {node.method.toUpperCase()}
           </Badge>
         )}
       </div>
-      {isExpanded && hasChildren && (
-        <div className="mt-0.5">
-          {node.children.map((child) => (
+      {hasChildren && isExpanded && (
+        <div className="pl-0"> {/* Children are already indented by their own level calculation */}
+          {node.children.map((childNode) => (
             <ApiTreeViewNode
-              key={child.id}
-              node={child}
+              key={childNode.id}
+              node={childNode}
               level={level + 1}
-              onToggleExpand={onToggleExpand}
-              expandedNodeIds={expandedNodeIds}
-              onApiSelect={onApiSelect}
-              selectedApiId={selectedApiId}
+              isExpanded={expandedNodeIds.has(childNode.id)} // Pass child's expansion state
+              isSelected={selectedApiNodeId === childNode.id && !!childNode.apiId} // Pass child's selection state
+              onToggleExpand={onToggleExpand} // Pass down from parent
+              onNodeSelect={onApiSelect} // Pass down from parent (renamed from onNodeSelect for clarity)
             />
           ))}
         </div>
@@ -108,5 +107,4 @@ const ApiTreeViewNode: React.FC<ApiTreeViewNodeProps> = ({
     </div>
   );
 };
-
 export default ApiTreeViewNode;

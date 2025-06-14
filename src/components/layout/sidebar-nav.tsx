@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from "next/link";
@@ -12,10 +11,10 @@ import {
   SearchCode,
   Siren,
   Cpu,
-  FolderLock, // For API Security parent
-  Network, // For MCP Security parent
-  ChevronDown, // For accordion
-
+  FolderLock,
+  Network,
+  ChevronDown,
+  FileText, // Added FileText
   type LucideIcon,
 } from "lucide-react";
 
@@ -27,23 +26,24 @@ import {
 } from "@/components/ui/sidebar";
 
 interface NavItem {
-  href?: string; // Optional for parent items
+  href?: string;
   label: string;
   icon: LucideIcon;
   soon?: boolean;
-  children?: NavItem[]; // For nested items
+  children?: NavItem[];
 }
 
 const navItems: NavItem[] = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-
+  // Added Doc Inventory here
+  { href: "/api-documentation", label: "Doc Inventory", icon: FileText },
   {
     label: "API Security",
     icon: FolderLock,
     children: [
       { href: "/api-catalog", label: "API Catalog", icon: BookText },
       { href: "/api-discovery", label: "API Discovery", icon: SearchCode },
-      { href: "/threat-detection", label: "API Threats", icon: Siren }, // Updated label
+      { href: "/threat-detection", label: "API Threats", icon: Siren },
     ],
   },
   {
@@ -51,8 +51,8 @@ const navItems: NavItem[] = [
     icon: Network,
     children: [
       { href: "/mcp-catalog", label: "MCP Catalog", icon: Cpu },
-      { href: "/mcp-discovery", label: "MCP Discovery", icon: SearchCode }, // New item
-      { href: "/mcp-threats", label: "MCP Threats", icon: Siren },       // New item
+      { href: "/mcp-discovery", label: "MCP Discovery", icon: SearchCode },
+      { href: "/mcp-threats", label: "MCP Threats", icon: Siren },
     ],
   },
   { href: "/security-policies", label: "Security Policies", icon: ShieldCheck },
@@ -69,67 +69,64 @@ export function SidebarNav() {
 
   const renderNavItem = (item: NavItem, isChild: boolean = false, parentLabel?: string) => {
     const Icon = item.icon;
-    const isOpen = parentLabel ? openSections[parentLabel] : openSections[item.label];
+    // isOpen for a parent item is its own state. For a child, it relies on its parent's state.
+    // The accordion toggle is on the parent, so item.label is the key for openSections.
+    const isOpen = item.children ? openSections[item.label] : (parentLabel ? openSections[parentLabel] : false);
 
-    // isActive for children, or for top-level non-parent items
+
     const isActiveDirect = !item.children && item.href && (pathname === item.href || (pathname.startsWith(item.href) && item.href !== "/"));
-    // A parent section is considered active if one of its children is active
     const isActiveParent = item.children && item.children.some(child => child.href && (pathname === child.href || pathname.startsWith(child.href)));
-    const isActive = isActiveDirect || isActiveParent;
+    // const isActive = isActiveDirect || isActiveParent; // This variable was defined but not directly used below, logic is in itemSpecificClassName
 
 
     const baseClasses = "w-full flex items-center gap-3 px-3 rounded-lg text-sm transition-all duration-200 ease-in-out text-sidebar-foreground group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:gap-0";
-    // Active classes for children or top-level active items
     const activeChildClasses = "bg-accent text-accent-foreground font-semibold hover:bg-accent/90 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
-    // Inactive classes for children or top-level non-active items
     const inactiveChildClasses = "hover:bg-accent/10 hover:text-accent focus-visible:bg-accent/10 focus-visible:text-accent";
 
-    // Specific styling for parent items (category headers)
     const parentItemClasses = "font-medium text-sidebar-foreground/90 hover:bg-muted/50";
-    const activeParentClass = "text-accent-foreground"; // When a child is active
+    const activeParentClass = "text-accent-foreground";
 
     let itemSpecificClassName;
 
-    if (item.children) { // Parent item
+    if (item.children) {
       itemSpecificClassName = cn(
         baseClasses,
-        "py-2", // Slightly less vertical padding for parents
+        "py-2",
         parentItemClasses,
-        isActiveParent && activeParentClass, // Highlight parent if a child is active
+        isActiveParent && activeParentClass,
         item.soon && "cursor-not-allowed opacity-60"
       );
-    } else { // Child item or top-level non-parent
+    } else {
       itemSpecificClassName = cn(
         baseClasses,
-        "py-2.5", // Original padding for clickable items
+        "py-2.5",
         isActiveDirect ? activeChildClasses : inactiveChildClasses,
-        isChild && "group-data-[collapsible=true]:pl-0 pl-7 text-xs", // Indentation for children
+        isChild && "pl-7 group-data-[collapsible=icon]:pl-0 text-xs",
         item.soon && "cursor-not-allowed opacity-60 hover:bg-transparent hover:text-sidebar-foreground"
       );
     }
 
     if (item.children) {
-      // Parent item - now clickable for accordion
       return (
         <SidebarMenuItem key={item.label} className="flex flex-col items-start">
           <button
-            onClick={() => toggleSection(item.label)}
+            onClick={() => toggleSection(item.label)} // Toggle based on the parent item's label
             className={cn(itemSpecificClassName, "w-full")}
-            aria-expanded={isOpen}
+            aria-expanded={openSections[item.label] || false} // Ensure aria-expanded reflects the specific section's state
           >
             <Icon className="h-5 w-5 shrink-0 group-data-[collapsible=icon]:h-6 group-data-[collapsible=icon]:w-6" />
             <span className="group-data-[collapsible=icon]:hidden flex-grow text-left">{item.label}</span>
             <ChevronDown
               className={cn(
                 "h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 group-data-[collapsible=icon]:hidden",
-                isOpen && "rotate-180"
+                openSections[item.label] && "rotate-180" // Chevron rotation based on specific section's state
               )}
             />
           </button>
           <div
             className={cn(
               "w-full flex flex-col items-start overflow-hidden transition-all duration-300 ease-in-out group-data-[collapsible=icon]:hidden",
-              isOpen ? "max-h-[1000px] opacity-100 mt-1" : "max-h-0 opacity-0" // Basic animation
+              openSections[item.label] ? "max-h-[1000px] opacity-100 mt-1" : "max-h-0 opacity-0" // Child visibility based on specific section's state
             )}
           >
             {item.children.map((child) => renderNavItem(child, true, item.label))}
@@ -138,7 +135,6 @@ export function SidebarNav() {
       );
     }
 
-    // Leaf item (actual link)
     return (
       <SidebarMenuItem key={item.label}>
         <Link href={item.href || "#"} passHref className={cn(item.soon && "pointer-events-none")}>
