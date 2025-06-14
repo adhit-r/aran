@@ -4,36 +4,37 @@ import ApiTreeViewNode from './ApiTreeViewNode';
 
 interface ApiTreeViewProps {
   treeData: TreeNode[];
-  onApiSelect: (apiId: string, event: React.MouseEvent) => void; // Pass event for more context if needed
-  defaultExpandedLevel?: number; // Expand tree to a certain level by default
+  onApiSelect: (apiId: string, event: React.MouseEvent) => void;
+  defaultExpandedLevel?: number;
   selectedApiId?: string | null;
 }
 
 const ApiTreeView: React.FC<ApiTreeViewProps> = ({
   treeData,
   onApiSelect,
-  defaultExpandedLevel = 0,
+  defaultExpandedLevel = 0, // Default to 0 (none expanded) or 1 (first level expanded)
   selectedApiId,
 }) => {
   const [expandedNodeIds, setExpandedNodeIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
-    const getDefaultExpanded = (nodes: TreeNode[], currentLevel: number): Set<string> => {
-      let ids = new Set<string>();
+    const getDefaultExpanded = (nodes: TreeNode[], currentLevel: number, currentPathIds: Set<string>): void => {
       if (currentLevel >= defaultExpandedLevel) {
-        return ids;
+        return;
       }
       nodes.forEach(node => {
         if (node.children && node.children.length > 0) {
-          ids.add(node.id);
-          const childIds = getDefaultExpanded(node.children, currentLevel + 1);
-          childIds.forEach(id => ids.add(id));
+          currentPathIds.add(node.id);
+          getDefaultExpanded(node.children, currentLevel + 1, currentPathIds);
         }
       });
-      return ids;
     };
     if (defaultExpandedLevel > 0) {
-      setExpandedNodeIds(getDefaultExpanded(treeData, 0));
+      const idsToExpand = new Set<string>();
+      getDefaultExpanded(treeData, 0, idsToExpand);
+      setExpandedNodeIds(idsToExpand);
+    } else {
+      setExpandedNodeIds(new Set<string>()); // Ensure it's reset if defaultExpandedLevel is 0
     }
   }, [treeData, defaultExpandedLevel]);
 
@@ -51,11 +52,11 @@ const ApiTreeView: React.FC<ApiTreeViewProps> = ({
   };
 
   if (!treeData || treeData.length === 0) {
-    return <div className="p-4 text-center text-muted-foreground">No API structure to display.</div>;
+    return <div className="p-4 text-center text-muted-foreground">No API structure to display. Filter might be too restrictive or no APIs available.</div>;
   }
 
   return (
-    <div className="p-2 space-y-0.5"> {/* Reduced space-y for tighter packing */}
+    <div className="p-2 space-y-0.5">
       {treeData.map((node) => (
         <ApiTreeViewNode
           key={node.id}
