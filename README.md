@@ -1,10 +1,15 @@
-# Aran API Sentinel
+# Aran API Sentinel: Your AI-Powered API Security & Governance Platform
 
-Aran API Sentinel is a comprehensive platform for API security, governance, cataloging, and discovery. It is designed to provide organizations with full visibility and control over their entire API ecosystem, from legacy systems to modern microservices.
+Aran API Sentinel is an intelligent platform designed to give organizations comprehensive visibility, security, and control over their entire API ecosystem. In today's interconnected digital landscape, APIs are critical assets, and Aran empowers you to manage them effectively.
 
-Leveraging AI-powered insights for automated API discovery and intelligent threat detection, Aran helps streamline API management, enforce consistent security policies, and foster better collaboration across development teams. Whether you are looking to secure your rapidly growing API landscape, ensure compliance, or simply understand your API inventory, Aran provides the tools you need.
+**What Aran Does:**
+*   **Automated API Discovery**: Leverages AI to continuously discover all your APIs, including shadow and zombie APIs, providing a complete inventory.
+*   **Centralized API Catalog**: Offers a searchable, well-organized catalog of all discovered and registered APIs, complete with metadata and documentation links.
+*   **Robust API Security**: Implements security best practices by helping you define, enforce, and monitor security policies across your APIs.
+*   **AI-Driven Threat Detection**: Proactively identifies and alerts on anomalous API traffic patterns and potential security threats.
+*   **Streamlined API Governance**: Facilitates consistent governance, ensuring APIs adhere to organizational standards and compliance requirements.
 
-This Next.js application serves as the primary interface to the Aran platform, integrating with Firebase for backend services and Genkit for its advanced AI capabilities.
+Built with Next.js for a responsive frontend, Firebase for backend services, and powered by Genkit for advanced AI capabilities, Aran API Sentinel is your solution for modern API lifecycle management and security.
 
 ## 🚀 Running the Frontend
 
@@ -38,29 +43,30 @@ npm run genkit:watch
 
 ## 🏗️ System Architecture
 
-The Aran platform comprises several key components working together:
+Aran API Sentinel integrates several key technologies to deliver its comprehensive features:
 
 ```mermaid
 graph TD
-    A[User] --> B(Next.js Frontend);
-    B --> C{Firebase};
+    A[User/Administrator] --> B(Next.js Frontend - Aran UI);
+    B --> C{Firebase Backend (Auth, Firestore, Storage)};
     C --> B;
-    B --> D[Genkit AI Flows];
-    D --> B;
-    D --> E[External AI Services];
+    B --> D[Genkit AI Flows (API Discovery, Threat Detection, etc.)];
+    D --> B; % For results/data to frontend
+    D --> C; % For storing/retrieving data from Firestore
+    D --> E[External AI Services (e.g., Google Gemini via Vertex AI)];
 ```
 
-*   **User**: Interacts with the Aran platform through the web interface.
-*   **Next.js Frontend**: The primary user interface built with Next.js and React. It provides dashboards, API catalogs, policy management interfaces, documentation views, and administrative controls.
-*   **Firebase**: Serves as a crucial part of the backend, providing services such as:
-    *   User authentication and authorization.
-    *   Firestore: A NoSQL database for storing application data, including API metadata, discovered document details, security policies, user information, and audit logs.
-    *   Firebase Storage (Conceptual/Future): For storing uploaded API specification files or other large assets.
-*   **Genkit AI Flows**: These are server-side TypeScript functions, orchestrated by Genkit, that power the AI-driven features of the application. This includes:
-    *   Automated API discovery by analyzing traffic patterns or code.
-    *   Intelligent threat detection by monitoring API request patterns and identifying anomalies.
-    *   Other AI-assisted governance or cataloging tasks.
-*   **External AI Services**: Genkit AI flows may connect to powerful external AI models (e.g., Google's Gemini models via Vertex AI, or other LLMs) to provide their advanced analytical and generative capabilities.
+*   **User/Administrator**: Interacts with Aran via the web interface to manage APIs, view dashboards, configure policies, and respond to security alerts.
+*   **Next.js Frontend (Aran UI)**: The primary, responsive user interface built with Next.js and React. It provides all user-facing functionalities like the API catalog, documentation inventory, policy management, threat dashboards, and administrative controls.
+*   **Firebase Backend**: Provides core backend-as-a-service capabilities:
+    *   **Authentication**: Manages user identities and access control.
+    *   **Firestore**: A NoSQL database used as the central repository for API metadata, discovered specifications, security policies, user data, audit logs, and threat intelligence.
+    *   **Cloud Storage**: (Conceptual for API Document Inventory) Used for storing uploaded API specification files (e.g., OpenAPI, Postman collections).
+*   **Genkit AI Flows**: These are server-side TypeScript functions, orchestrated by the Genkit framework, that execute the platform's AI-driven logic. Key responsibilities include:
+    *   Automated discovery of APIs by analyzing network traffic or code repositories.
+    *   Intelligent threat detection by processing API request/response patterns and identifying anomalies.
+    *   AI-assisted governance, such as compliance checks or documentation generation assistance.
+*   **External AI Services**: To perform advanced analysis and generation tasks, Genkit AI flows interface with powerful external AI models (e.g., Google's Gemini models via Vertex AI, or other Large Language Models).
 
 ## 📄 Documentation
 
@@ -78,7 +84,7 @@ Comprehensive documentation for Aran API Sentinel is available on our Docusaurus
 
 **Accessing the Documentation:**
 
-*   **Live Site (Once Deployed)**: The live documentation will be available at `https://YOUR_GITHUB_USERNAME.github.io/YOUR_REPOSITORY_NAME/` (Please update this URL after the first deployment via GitHub Pages, ensuring the path reflects your GitHub Pages configuration, e.g., it might include the Docusaurus site's `baseUrl` if not deploying to a root).
+*   **Live Site (Once Deployed)**: The live documentation will be available at `https://radhi1991.github.io/aran/` (Please update this URL if your GitHub username or repository name changes, or if you use a custom domain).
 *   **Local Development**:
     1.  Navigate to the `docs/website` directory in your terminal:
         ```bash
