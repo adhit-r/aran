@@ -1,8 +1,10 @@
-# Aran
+# Aran API Sentinel
 
-This is a NextJS starter in Firebase Studio.
+Aran API Sentinel is a comprehensive platform for API security, governance, cataloging, and discovery. It is designed to provide organizations with full visibility and control over their entire API ecosystem, from legacy systems to modern microservices.
 
-To get started, take a look at src/app/page.tsx.
+Leveraging AI-powered insights for automated API discovery and intelligent threat detection, Aran helps streamline API management, enforce consistent security policies, and foster better collaboration across development teams. Whether you are looking to secure your rapidly growing API landscape, ensure compliance, or simply understand your API inventory, Aran provides the tools you need.
+
+This Next.js application serves as the primary interface to the Aran platform, integrating with Firebase for backend services and Genkit for its advanced AI capabilities.
 
 ## 🚀 Running the Frontend
 
@@ -36,6 +38,8 @@ npm run genkit:watch
 
 ## 🏗️ System Architecture
 
+The Aran platform comprises several key components working together:
+
 ```mermaid
 graph TD
     A[User] --> B(Next.js Frontend);
@@ -44,8 +48,19 @@ graph TD
     B --> D[Genkit AI Flows];
     D --> B;
     D --> E[External AI Services];
-end
 ```
+
+*   **User**: Interacts with the Aran platform through the web interface.
+*   **Next.js Frontend**: The primary user interface built with Next.js and React. It provides dashboards, API catalogs, policy management interfaces, documentation views, and administrative controls.
+*   **Firebase**: Serves as a crucial part of the backend, providing services such as:
+    *   User authentication and authorization.
+    *   Firestore: A NoSQL database for storing application data, including API metadata, discovered document details, security policies, user information, and audit logs.
+    *   Firebase Storage (Conceptual/Future): For storing uploaded API specification files or other large assets.
+*   **Genkit AI Flows**: These are server-side TypeScript functions, orchestrated by Genkit, that power the AI-driven features of the application. This includes:
+    *   Automated API discovery by analyzing traffic patterns or code.
+    *   Intelligent threat detection by monitoring API request patterns and identifying anomalies.
+    *   Other AI-assisted governance or cataloging tasks.
+*   **External AI Services**: Genkit AI flows may connect to powerful external AI models (e.g., Google's Gemini models via Vertex AI, or other LLMs) to provide their advanced analytical and generative capabilities.
 
 ## 📄 Documentation
 
