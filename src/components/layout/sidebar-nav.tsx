@@ -15,7 +15,7 @@ import {
   FolderLock, // For API Security parent
   Network, // For MCP Security parent
   ChevronDown, // For accordion
-  FileText, // For Doc Inventory
+
   type LucideIcon,
 } from "lucide-react";
 
@@ -36,7 +36,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/api-documentation", label: "Doc Inventory", icon: FileText },
+
   {
     label: "API Security",
     icon: FolderLock,

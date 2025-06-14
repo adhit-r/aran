@@ -1,4 +1,4 @@
-# **App Name**: API Sentinel
+# **App Name**: ARAN
 
 ## Core Features:
 
