@@ -1,187 +1,123 @@
-// src/lib/api-tree-utils.ts
-
-export interface ApiEntry {
-  id: string;
-  name: string;
-  endpoint: string;
-  // other properties like method, description, etc. could be here
-  method?: string; // Adding method as it's common for APIs
-  description?: string;
-}
+import type { ApiEntry } from '@/types/api-document'; // Adjusted import path
 
 export interface TreeNode {
-  id: string; // Unique ID for the node (e.g., generated from full path)
-  name: string; // Name of the path segment
-  fullPath: string; // Full path to this node
+  id: string;          // e.g., 'segment1/segment2/segment3' or 'segment1/segment2/api-{apiId}'
+  name: string;        // The last segment name (e.g., 'segment3' or API name for API nodes)
+  fullPath: string;    // Full path from root, e.g., 'segment1/segment2/segment3'
   children: TreeNode[];
-  apiId?: string; // Optional: ID of the ApiEntry if this node represents an actual API
-  apiName?: string; // Optional: Name of the API if this node represents an actual API
-  method?: string; // Optional: HTTP method if this node represents an API
+  apiId?: string;       // ID of the ApiEntry if this node represents an API endpoint
+  method?: string;      // HTTP method if it's an API endpoint
+  // Add apiName if you want to store the original API name separately from the segment name
 }
 
-/**
- * Parses an API endpoint string (URL or path) into an array of path segments.
- * @param endpoint The API endpoint string.
- * @returns An array of path segments.
- */
 export function parseEndpointPath(endpoint: string): string[] {
-  let pathname: string;
+  let pathOnly = endpoint;
   try {
-    // Check if it's a full URL
-    if (endpoint.includes('://')) {
+    if (endpoint.startsWith('http://') || endpoint.startsWith('https://')) {
       const url = new URL(endpoint);
-      pathname = url.pathname;
-    } else {
-      // Assume it's already a path
-      pathname = endpoint;
+      pathOnly = url.pathname;
     }
-  } catch (error) {
-    // Invalid URL or endpoint string
-    console.error(`Invalid endpoint string: ${endpoint}`, error);
-    return [];
+  } catch (e) {
+    // Invalid URL, proceed assuming it might be a path or malformed
+    console.warn(`Invalid URL string for endpoint: ${endpoint}`, e);
   }
 
-  // Normalize the path: remove leading/trailing slashes and split
-  const segments = pathname
-    .trim()
-    .replace(/^\/+|\/+$/g, '') // Remove leading and trailing slashes
-    .split('/');
-
-  // Filter out any empty segments (e.g., from multiple slashes like //)
-  // and decode URI components
-  return segments.filter(segment => segment.length > 0).map(decodeURIComponent);
+  return pathOnly
+    .replace(/^\/+|\/+$/g, '') // Remove leading/trailing slashes
+    .split('/')
+    .filter(segment => segment.length > 0) // Remove empty segments from multiple slashes
+    .map(segment => decodeURIComponent(segment));
 }
 
-/**
- * Builds an API tree from a list of API entries.
- * @param apis An array of ApiEntry objects.
- * @param parseFn The function to parse endpoint paths into segments.
- * @returns An array of root TreeNode objects.
- */
-export function buildApiTree(
-  apis: ApiEntry[],
-  parseFn: (endpoint: string) => string[] = parseEndpointPath
-): TreeNode[] {
+export function buildApiTree(apis: ApiEntry[]): TreeNode[] {
   const rootNodes: TreeNode[] = [];
-  const nodeMap = new Map<string, TreeNode>(); // Helper to quickly find nodes by fullPath
+  const nodeMap = new Map<string, TreeNode>(); // Tracks nodes by their fullPath to avoid duplicates
 
   apis.forEach(api => {
-    const segments = parseFn(api.endpoint);
+    const segments = parseEndpointPath(api.endpoint);
+    let currentLevelNodes = rootNodes; // This will point to rootNodes or a parent's children array
+    let currentPath = '';
 
-    if (segments.length === 0) {
-      const rootApiNodeId = `api-root-${api.id}`;
-      let rootApiNode = nodeMap.get(rootApiNodeId); // Try to find an existing node for this specific API ID at root
-      if (!rootApiNode) { // If no specific node for this API ID, try to find a generic one by path '/'
-          rootApiNode = nodeMap.get('/');
-      }
+    if (segments.length === 0) { // Root-level API
+      const nodeId = `api-root-${api.id}`; // Make ID unique for root APIs
+      let rootApiNode = nodeMap.get(nodeId); // Check if this specific API node already exists
 
       if (!rootApiNode) {
-        rootApiNode = {
-          id: rootApiNodeId,
-          name: api.name || api.endpoint || 'Root API',
-          fullPath: '/',
-          children: [],
-          apiId: api.id,
-          apiName: api.name,
-          method: api.method,
-        };
-        rootNodes.push(rootApiNode);
-        nodeMap.set(rootApiNodeId, rootApiNode); // Map by specific ID
-        if (!nodeMap.has('/')) nodeMap.set('/', rootApiNode); // Also map by generic path if not taken
-      } else {
-        // If a node for path '/' or specific ID already existed, update it if it wasn't this specific API
-        // This logic might need refinement if multiple APIs truly map to the exact same root path
-        // and should be represented as distinct nodes at the root.
-        // For now, if a generic '/' node exists, we might overwrite its apiId if it's not set.
-        if (!rootApiNode.apiId) {
-            rootApiNode.apiId = api.id;
-            rootApiNode.apiName = api.name;
-            rootApiNode.method = api.method;
-        } else if (rootApiNode.apiId !== api.id) {
-            // If the existing root node represents a *different* API, create a new node
-            const newRootApiNode: TreeNode = {
-                id: rootApiNodeId,
-                name: api.name || api.endpoint || 'Root API',
-                fullPath: '/',
-                children: [],
-                apiId: api.id,
-                apiName: api.name,
-                method: api.method,
-            };
-            rootNodes.push(newRootApiNode);
-            nodeMap.set(rootApiNodeId, newRootApiNode);
-        }
+          // If a generic "/" node exists from another API, we might want to add this as a distinct node or merge.
+          // For simplicity, let's create a distinct node if its ID is different.
+          // A more complex merge could involve a root "/" node that lists multiple direct APIs.
+          rootApiNode = {
+            id: nodeId,
+            name: `${api.method ? api.method + ' ' : ''}${api.name}`,
+            fullPath: '/', // All root APIs share a conceptual '/' path
+            children: [],
+            apiId: api.id,
+            method: api.method,
+          };
+          rootNodes.push(rootApiNode);
+          nodeMap.set(nodeId, rootApiNode); // Store by its unique API-specific ID
       }
+      // If rootApiNode with this ID already exists, we assume it's the same API, do nothing.
       return;
     }
 
-    let currentLevelNodes = rootNodes;
-    let currentPath = '';
-
     segments.forEach((segment, index) => {
-      const parentPath = currentPath;
+      const isLastSegment = index === segments.length - 1;
+      const previousPath = currentPath;
       currentPath = currentPath ? `${currentPath}/${segment}` : segment;
       let node = nodeMap.get(currentPath);
 
       if (!node) {
         node = {
-          id: `node-${currentPath.replace(/\//g, '-')}`,
+          id: currentPath, // Use full path as ID for path segment nodes
           name: segment,
           fullPath: currentPath,
           children: [],
         };
-        // Add to correct parent's children list or rootNodes
-        if (parentPath === '') { // This means it's a root segment
-            currentLevelNodes.push(node);
+        if (previousPath === '') { // Node is a child of the root
+          rootNodes.push(node);
         } else {
-            const parentNode = nodeMap.get(parentPath);
-            if (parentNode) { // Should always exist if parentPath is not empty
-                parentNode.children.push(node);
-                parentNode.children.sort((a, b) => a.name.localeCompare(b.name));
-            } else { // Fallback, though ideally parent should be found
-                currentLevelNodes.push(node);
-            }
+          const parentNode = nodeMap.get(previousPath);
+          parentNode?.children.push(node); // parentNode should exist
         }
         nodeMap.set(currentPath, node);
-        if (parentPath === '') { // If it was added to rootNodes
-             currentLevelNodes.sort((a, b) => a.name.localeCompare(b.name));
-        }
       }
 
-      if (index === segments.length - 1) {
-        // This node (or a new one if methods differ) represents the API endpoint
-        if (!node.apiId) { // If it's purely a path segment so far
-            node.apiId = api.id;
-            node.apiName = api.name;
-            node.method = api.method;
-        } else if (node.apiId !== api.id && node.fullPath === currentPath) {
-            // The path segment itself was already an API, and this is a new API on the same path (e.g. different method)
-            // Create a new child node specifically for this API method/ID if methods are different or names are different
-            // Or, if methods are the same, this might be an issue with data (multiple APIs with same path & method)
-            const methodNodeName = api.method ? `${api.method} - ${api.name}` : api.name;
-            const methodNodeId = `node-${currentPath.replace(/\//g, '-')}-${api.method || 'nomethod'}-${api.id}`;
-
-            let methodNode = node.children.find(child => child.id === methodNodeId);
-            if (!methodNode) {
-                 methodNode = {
-                    id: methodNodeId,
-                    name: methodNodeName,
-                    fullPath: currentPath, // It shares the path but is distinct by method/id
-                    children: [],
-                    apiId: api.id,
-                    apiName: api.name,
-                    method: api.method,
-                };
-                node.children.push(methodNode);
-                node.children.sort((a, b) => a.name.localeCompare(b.name));
-                // nodeMap.set(methodNodeId, methodNode); // Not strictly necessary to map these distinct method nodes if only accessed via parent
-            }
+      if (isLastSegment) { // This segment corresponds to the API endpoint
+        // If the node itself is not yet an API, make it one
+        if (!node.apiId) {
+          node.apiId = api.id;
+          node.method = api.method;
+          // node.name = `${api.method ? api.method + ' ' : ''}${api.name}`; // Optionally rename the path segment node to the API name/method
+        } else {
+          // The path segment is already an API. Create a new child node for this specific API method/ID.
+          // This handles cases like /users (GET all users) and /users (POST create user)
+          const specificApiNodeId = `api-leaf-${api.id}`; // Ensure unique ID for leaf API node
+          const specificApiNode: TreeNode = {
+            id: specificApiNodeId,
+            name: `${api.method ? api.method + ' ' : ''}${api.name}`,
+            fullPath: currentPath + '/' + specificApiNodeId, // Make path distinct for map if needed, though parentage handles structure
+            children: [],
+            apiId: api.id,
+            method: api.method,
+          };
+          node.children.push(specificApiNode);
+          // nodeMap.set(specificApiNodeId, specificApiNode); // Not strictly needed if only accessed via parent
         }
       }
-      currentLevelNodes = node.children; // Next iteration will look into this node's children
+      // Sort children after modification
+      if (previousPath === '') {
+        rootNodes.sort((a, b) => a.name.localeCompare(b.name));
+      } else {
+        nodeMap.get(previousPath)?.children.sort((a, b) => a.name.localeCompare(b.name));
+      }
+      // For the next iteration, current node's children become the level to add to
+      currentLevelNodes = node.children; // This line was missing in the provided logic, it should be here.
+                                        // However, the logic structure with parentNode.children.push is more robust.
+                                        // The currentLevelNodes variable as used in the original prompt was a bit ambiguous.
+                                        // The corrected logic above directly pushes to parentNode.children or rootNodes.
     });
   });
-  // Final sort of root nodes
-  rootNodes.sort((a,b) => a.name.localeCompare(b.name));
+  rootNodes.sort((a, b) => a.name.localeCompare(b.name)); // Final sort of root nodes
   return rootNodes;
 }

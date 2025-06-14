@@ -1,15 +1,6 @@
 
 "use client";
 
-function sanitizeUrl(url: string): string {
-  try {
-    const parsedUrl = new URL(url, window.location.origin);
-    return parsedUrl.href;
-  } catch {
-    return ""; // Return an empty string for invalid URLs
-  }
-}
-
 import * as React from "react";
 import {
   Table,
@@ -254,7 +245,7 @@ export default function ApiCatalogPage() {
         category: newApiCategory,
         owner: newApiOwner,
         status: "development",
-        documentationUrl: sanitizeUrl(newApiDocsUrl)
+        documentationUrl: newApiDocsUrl
     };
     setApis([...apis, newApi]);
     setIsDialogOpen(false);
@@ -360,6 +351,33 @@ export default function ApiCatalogPage() {
         />
       </div>
 
+      <div className="flex items-center justify-between">
+        <div className="relative w-full max-w-md">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            type="search"
+            placeholder="Search APIs by name, endpoint, category, owner, or method..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10 w-full"
+          />
+        </div>
+        <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">View:</span>
+            <Button variant={viewMode === 'table' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('table')}>
+                <List className="mr-2 h-4 w-4" /> Table
+            </Button>
+            <Button variant={viewMode === 'tree' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('tree')}>
+                <FolderTree className="mr-2 h-4 w-4" /> Tree
+            </Button>
+        </div>
+      </div>
+
+
+      {viewMode === 'table' && (
+        <Card>
+          <Table>
+            <TableHeader>
               <TableRow>
                 <TableHead>Name</TableHead>
                 <TableHead>Method</TableHead>
