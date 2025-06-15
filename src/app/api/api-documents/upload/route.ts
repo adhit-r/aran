@@ -1,55 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ApiDocumentMetadata, ApiDocumentFormat } from '@/types/api-document';
-import { v4 as uuidv4 } from 'uuid'; // For generating unique IDs if Firestore isn't auto-generating client-side
 import YAML from 'js-yaml'; // For parsing YAML files
+import fs from 'fs/promises';
+import path from 'path';
+import { getOpenDb, generateNewId } from '@/lib/sqlite-db'; // DB Utilities
 
-// --- Firebase Admin SDK Setup (Conceptual - actual initialization would be in a shared lib) ---
-// import admin from 'firebase-admin';
-// import { getStorage } from 'firebase-admin/storage';
-// import { getFirestore, FieldValue } from 'firebase-admin/firestore';
+// Define Upload Directory
+const UPLOADS_DIR = path.join(process.cwd(), 'uploads', 'api_specs');
 
-// Mock Firebase initialization check - in a real app, this would be handled by firebase-admin setup
-let _firebaseAppInitialized = false;
-function initializeFirebaseAdminIfNeeded() {
-  if (!_firebaseAppInitialized) {
-    // Conceptual: admin.initializeApp(...);
-    console.log("Mock Firebase Admin Initialized (Conceptual)");
-    _firebaseAppInitialized = true;
-  }
-}
-initializeFirebaseAdminIfNeeded();
-
-// --- Mock Firebase Interaction Functions ---
-// These would use the Firebase Admin SDK in a real backend
-async function mockUploadToStorage(fileBuffer: Buffer, filePath: string, contentType?: string): Promise<{ success: boolean; storagePath?: string; error?: string }> {
-  console.log(`Mock uploading ${filePath} (${(fileBuffer.length / 1024).toFixed(2)} KB, type: ${contentType}) to Firebase Storage.`);
-  // In real implementation:
-  // const bucket = getStorage().bucket();
-  // await bucket.file(filePath).save(fileBuffer, { metadata: { contentType } });
-  return { success: true, storagePath: filePath };
-}
-
-async function mockSaveMetadataToFirestore(metadata: Omit<ApiDocumentMetadata, 'id'>): Promise<ApiDocumentMetadata> {
-  const newId = uuidv4(); // Generate ID client-side for mock
-  const savedDoc = {
-    ...metadata,
-    id: newId,
-    uploadedAt: new Date(), // Simulate server timestamp
-    lastModifiedAt: new Date(),
-  } as ApiDocumentMetadata;
-  console.log(`Mock saving metadata to Firestore for doc ID: ${newId}`, savedDoc);
-  // In real implementation:
-  // const db = getFirestore();
-  // const docRef = await db.collection('apiDocuments').add({
-  //   ...metadata,
-  //   uploadedAt: FieldValue.serverTimestamp(),
-  //   lastModifiedAt: FieldValue.serverTimestamp(),
-  // });
-  // return { ...metadata, id: docRef.id, uploadedAt: new Date(), lastModifiedAt: new Date() }; // Approximate
-  return savedDoc;
-}
-
-
+// Helper functions (detectFormat, parseApiDocumentContent) remain the same as they are generic
 function detectFormat(fileName: string, contentType?: string): ApiDocumentFormat {
   const extension = fileName.split('.').pop()?.toLowerCase();
   if (contentType === 'application/json' || extension === 'json') {
@@ -58,7 +17,6 @@ function detectFormat(fileName: string, contentType?: string): ApiDocumentFormat
   if (contentType === 'application/yaml' || contentType === 'text/yaml' || extension === 'yaml' || extension === 'yml') {
     return 'openapi-yaml';
   }
-  // Add more sophisticated detection if needed, e.g., based on content structure for Postman
   return 'unknown';
 }
 
@@ -66,12 +24,14 @@ interface ParsedSpecInfo {
   title?: string;
   version?: string;
   description?: string;
-  format?: ApiDocumentFormat; // Can refine format after parsing
+  format?: ApiDocumentFormat;
+  tags?: string[]; // Added tags from parsing if possible
 }
 
 async function parseApiDocumentContent(content: string, initialFormat: ApiDocumentFormat): Promise<ParsedSpecInfo> {
   let parsed: any;
   let finalFormat = initialFormat;
+  let tags: string[] | undefined = undefined;
 
   try {
     if (initialFormat === 'openapi-yaml') {
@@ -79,15 +39,13 @@ async function parseApiDocumentContent(content: string, initialFormat: ApiDocume
     } else if (initialFormat === 'openapi-json') {
       parsed = JSON.parse(content);
     } else {
-      // Try parsing as JSON by default if unknown but looks like JSON based on extension
       try {
         parsed = JSON.parse(content);
-        finalFormat = 'openapi-json'; // Tentatively assume OpenAPI JSON
+        finalFormat = 'openapi-json';
       } catch (e) {
-        // If JSON parsing fails, try YAML
         try {
           parsed = YAML.load(content);
-          finalFormat = 'openapi-yaml'; // Tentatively assume OpenAPI YAML
+          finalFormat = 'openapi-yaml';
         } catch (yamlError) {
           console.warn("Failed to parse content as JSON or YAML.", yamlError);
           return { format: 'unknown' };
@@ -95,25 +53,27 @@ async function parseApiDocumentContent(content: string, initialFormat: ApiDocume
       }
     }
 
-    // Check for OpenAPI structure
     if (parsed && (parsed.openapi || parsed.swagger)) {
-      finalFormat = initialFormat === 'openapi-yaml' || finalFormat === 'openapi-yaml' ? 'openapi-yaml' : 'openapi-json';
+      finalFormat = (finalFormat === 'openapi-yaml' || initialFormat === 'openapi-yaml') ? 'openapi-yaml' : 'openapi-json';
+      if (Array.isArray(parsed.tags)) {
+        tags = parsed.tags.map((tag: any) => typeof tag.name === 'string' ? tag.name : undefined).filter(Boolean) as string[];
+      }
       return {
         title: parsed.info?.title,
         version: parsed.info?.version,
         description: parsed.info?.description,
         format: finalFormat,
+        tags: tags,
       };
     }
-    // Check for Postman Collection structure (basic)
     else if (parsed && parsed.info && parsed.item) {
-        // More specific check for Postman schema version might be good
         if (parsed.info._postman_id) {
              finalFormat = 'postman-collection';
         }
+      // Postman collections don't typically have a global tags field in info, tags are per-item.
       return {
-        title: parsed.info?.name, // Postman uses 'name' in info block
-        version: parsed.info?.version?.string || parsed.info?.version, // Postman version can be an object or string
+        title: parsed.info?.name,
+        version: parsed.info?.version?.string || parsed.info?.version,
         description: typeof parsed.info?.description === 'string' ? parsed.info.description : parsed.info?.description?.content,
         format: finalFormat,
       };
@@ -121,9 +81,9 @@ async function parseApiDocumentContent(content: string, initialFormat: ApiDocume
 
   } catch (error) {
     console.error('Error parsing API document content:', error);
-    return { format: 'unknown' }; // Return unknown if any parsing error
+    return { format: 'unknown' };
   }
-  return { format: 'unknown' }; // Default if no known structure identified
+  return { format: 'unknown' };
 }
 
 
@@ -136,24 +96,24 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No file uploaded.' }, { status: 400 });
     }
 
-    // Basic validation
     const MAX_FILE_SIZE_MB = 5;
     if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
-      return NextResponse.json({ error: `File too large. Max size is ${MAX_FILE_SIZE_MB}MB.` }, { status: 413 }); // 413 Payload Too Large
+      return NextResponse.json({ error: `File too large. Max size is ${MAX_FILE_SIZE_MB}MB.` }, { status: 413 });
     }
 
-    const userId = 'mock-user-id'; // TODO: Replace with actual authenticated user ID
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-'); // Firestore-friendly timestamp for filename
-    const uniqueFileNameForStorage = `${timestamp}-${file.name}`;
-    const storagePath = `api-documents/${userId}/${uniqueFileNameForStorage}`;
+    // Ensure upload directory exists
+    await fs.mkdir(UPLOADS_DIR, { recursive: true });
+
+    // Save file to local filesystem
+    // Use a timestamp and original filename for uniqueness on disk, but keep original filename for metadata
+    const timestampPrefix = `${Date.now()}`;
+    const uniqueDiskFileName = `${timestampPrefix}-${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`; // Sanitize filename
+    const diskPath = path.join(UPLOADS_DIR, uniqueDiskFileName);
+    const relativeStoragePath = path.join('uploads', 'api_specs', uniqueDiskFileName); // Path relative to cwd
 
     const fileBuffer = Buffer.from(await file.arrayBuffer());
-
-    // Upload to Firebase Storage (using mock)
-    const uploadResult = await mockUploadToStorage(fileBuffer, storagePath, file.type);
-    if (!uploadResult.success || !uploadResult.storagePath) {
-      return NextResponse.json({ error: 'Failed to upload file to storage.' }, { status: 500 });
-    }
+    await fs.writeFile(diskPath, fileBuffer);
+    console.log(`File saved to disk: ${diskPath}`);
 
     // Metadata Extraction
     const fileContentText = await file.text();
@@ -161,26 +121,55 @@ export async function POST(request: NextRequest) {
     const parsedInfo = await parseApiDocumentContent(fileContentText, initialFormat);
 
     const finalFormat = parsedInfo.format || initialFormat;
+    const documentId = generateNewId(); // Generate UUID for the document
+    const currentTime = new Date().toISOString();
+    const userId = 'mock-user-id'; // TODO: Replace with actual authenticated user ID
 
-    const metadataToSave: Omit<ApiDocumentMetadata, 'id' | 'uploadedAt' | 'lastModifiedAt' | 'downloadUrl'> = {
+    const metadataToSave: ApiDocumentMetadata = {
+      id: documentId,
       fileName: file.name,
-      title: parsedInfo.title || file.name, // Default to filename if no title extracted
+      title: parsedInfo.title || file.name,
       version: parsedInfo.version,
       description: parsedInfo.description,
       format: finalFormat,
-      storagePath: uploadResult.storagePath,
+      storagePath: relativeStoragePath, // Store relative path
       uploadedBy: userId,
-      // teamId, projectId, tags can be added later or passed from client
+      uploadedAt: new Date(currentTime), // Store as Date object, will be stringified by JSON response
+      lastModifiedAt: new Date(currentTime),
+      tags: parsedInfo.tags || [],
+      // teamId, projectId can be added later or passed from client
     };
 
-    // Save metadata to Firestore (using mock)
-    const savedMetadata = await mockSaveMetadataToFirestore(metadataToSave);
+    // Store metadata in SQLite
+    const db = await getOpenDb();
+    const stmt = await db.prepare(`
+      INSERT INTO apiDocuments (id, fileName, title, version, format, storagePath, uploadedBy, uploadedAt, lastModifiedAt, teamId, projectId, description, tags)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    `);
 
-    return NextResponse.json(savedMetadata, { status: 201 });
+    await stmt.run(
+      metadataToSave.id,
+      metadataToSave.fileName,
+      metadataToSave.title,
+      metadataToSave.version,
+      metadataToSave.format,
+      metadataToSave.storagePath,
+      metadataToSave.uploadedBy,
+      (metadataToSave.uploadedAt as Date).toISOString(), // Store dates as ISO strings
+      (metadataToSave.lastModifiedAt as Date).toISOString(),
+      metadataToSave.teamId,       // Will be NULL if undefined
+      metadataToSave.projectId,    // Will be NULL if undefined
+      metadataToSave.description,  // Will be NULL if undefined
+      JSON.stringify(metadataToSave.tags) // Store tags array as JSON string
+    );
+    await stmt.finalize();
+
+    console.log(`Metadata saved to SQLite for doc ID: ${documentId}`);
+
+    return NextResponse.json(metadataToSave, { status: 201 });
 
   } catch (error: any) {
     console.error('Error uploading API document:', error);
-    // Check for specific error types if needed, e.g., from Firebase
     return NextResponse.json({ error: 'Failed to upload API document.', details: error.message || String(error) }, { status: 500 });
   }
 }
