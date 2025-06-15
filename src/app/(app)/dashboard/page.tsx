@@ -191,7 +191,7 @@ export default function DashboardPage() {
               <Line yAxisId="left" type="monotone" dataKey="latency" strokeWidth={2.5} dot={{r:4, fill:'hsl(var(--background))', stroke:'hsl(var(--chart-1))'}} activeDot={{r:6}} stroke="hsl(var(--chart-1))" name={chartConfig.latency.label} />
               <Line yAxisId="center" type="monotone" dataKey="errorRate" strokeWidth={2.5} dot={{r:4, fill:'hsl(var(--background))', stroke:'hsl(var(--chart-5))'}} activeDot={{r:6}} stroke="hsl(var(--chart-5))" name={chartConfig.errorRate.label} />
               {/* <Line yAxisId="right" type="monotone" dataKey="rps" strokeWidth={2} dot={{r:4, fill:'hsl(var(--background))', stroke:'hsl(var(--chart-3))'}} activeDot={{r:6}} stroke="hsl(var(--chart-3))" name={chartConfig.rps.label} /> */}
-              <ChartLegend content={<ChartLegendContent wrapperStyle={{paddingTop: '16px'}} />} />
+              <ChartLegend content={<ChartLegendContent style={{paddingTop: '16px'}} />} />
             </LineChart>
           </ChartContainer>
         </GlassCard>
