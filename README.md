@@ -58,10 +58,13 @@ graph TD
 
 *   **User/Administrator**: Interacts with Aran via the web interface to manage APIs, view dashboards, configure policies, and respond to security alerts.
 *   **Next.js Frontend (Aran UI)**: The primary, responsive user interface built with Next.js and React. It provides all user-facing functionalities like the API catalog, documentation inventory, policy management, threat dashboards, and administrative controls.
-*   **Firebase Backend**: Provides core backend-as-a-service capabilities:
-    *   **Authentication**: Manages user identities and access control.
-    *   **Firestore**: A NoSQL database used as the central repository for API metadata, discovered specifications, security policies, user data, audit logs, and threat intelligence.
-    *   **Cloud Storage**: (Conceptual for API Document Inventory) Used for storing uploaded API specification files (e.g., OpenAPI, Postman collections).
+*   **Firebase Backend**: Provides core backend-as-a-service capabilities for certain platform features:
+    *   **Authentication (Conceptual/Planned)**: Envisioned for managing user identities and access control for the overall platform.
+    *   **Firestore (Conceptual/Planned)**: Potentially used for storing application-wide data like user profiles, general API catalog metadata (if not moved to another DB), or security policies.
+    *   *(Note: The API Document Inventory feature, as currently implemented, uses a local SQLite database for metadata and local filesystem for file storage, separate from Firebase.)*
+*   **Local Data Storage (for API Document Inventory)**:
+    *   **SQLite Database**: A local SQLite database (`data/aran_docs.sqlite`) is used to store metadata for the API Document Inventory feature (e.g., titles, formats, paths to specification files).
+    *   **Local Filesystem**: Uploaded API specification files for the Document Inventory are stored on the server's local filesystem (in the `uploads/api_specs` directory).
 *   **Genkit AI Flows**: These are server-side TypeScript functions, orchestrated by the Genkit framework, that execute the platform's AI-driven logic. Key responsibilities include:
     *   Automated discovery of APIs by analyzing network traffic or code repositories.
     *   Intelligent threat detection by processing API request/response patterns and identifying anomalies.

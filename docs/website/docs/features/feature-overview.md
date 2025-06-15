@@ -39,6 +39,10 @@ Aran API Sentinel enables you to **define, enforce, and monitor consistent secur
 
 This overview provides a starting point for understanding Aran API Sentinel's capabilities. Each of these features will be explored in more detail in subsequent documentation sections.
 
+### Note on API Document Inventory Backend
+
+The API Document Inventory functionality, which allows for uploading and managing API specification files (detailed further in its dedicated documentation page), currently utilizes a local SQLite database for storing metadata and the server's local filesystem for the spec files themselves. This ensures data locality and self-contained operation for this specific feature.
+
 ## AI-Powered API Discovery Workflow
 
 The following diagram illustrates the high-level workflow for AI-Powered API Discovery:
