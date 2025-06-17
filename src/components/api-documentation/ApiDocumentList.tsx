@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Eye, Download, Loader2, AlertTriangle, Info, ChevronLeft, ChevronRight } from 'lucide-react'; // Added Chevron icons
+import { Eye, Download, Loader2, AlertTriangle, Info, ChevronLeft, ChevronRight } from 'lucide-react';
 import { format } from 'date-fns';
 
 interface ApiDocumentListProps {
@@ -46,7 +46,7 @@ export function ApiDocumentList({
       case 'openapi-json': return 'default';
       case 'openapi-yaml': return 'secondary';
       case 'postman-collection': return 'outline';
-      default: return 'destructive'; // for 'unknown'
+      default: return 'destructive';
     }
   };
 
@@ -69,7 +69,7 @@ export function ApiDocumentList({
     );
   }
 
-  if (documents.length === 0 && !isLoading) { // Ensure not to show "No documents" when initially loading
+  if (documents.length === 0 && !isLoading) {
     return (
       <div className={`flex flex-col items-center justify-center h-60 border rounded-md bg-background shadow-sm p-6 ${className}`}>
         <Info className="h-8 w-8 mb-3 text-muted-foreground" />
@@ -80,7 +80,7 @@ export function ApiDocumentList({
   }
 
   return (
-    <div className={`border rounded-lg bg-background shadow-sm overflow-hidden ${className}`}> {/* Changed rounded-md to rounded-lg for consistency, added overflow-hidden */}
+    <div className={`border rounded-lg bg-background shadow-sm overflow-hidden ${className}`}>
       <Table>
         <TableHeader>
           <TableRow>
@@ -124,7 +124,7 @@ export function ApiDocumentList({
         </TableBody>
       </Table>
       {pagination && pagination.pageCount > 1 && onPageChange && (
-        <div className="flex items-center justify-between space-x-2 py-3 px-4 border-t bg-muted/30"> {/* Adjusted padding and bg */}
+        <div className="flex items-center justify-between space-x-2 py-3 px-4 border-t bg-muted/30">
           <div className="text-sm text-muted-foreground flex-1">
             Showing {pagination.offset + 1} - {Math.min(pagination.offset + pagination.limit, pagination.total)} of {pagination.total} document(s).
           </div>
@@ -137,7 +137,7 @@ export function ApiDocumentList({
               size="sm"
               onClick={() => onPageChange(pagination.currentPage - 1)}
               disabled={pagination.currentPage <= 1}
-              className="h-8 w-8 p-0" // Make buttons smaller for pagination
+              className="h-8 w-8 p-0"
             >
               <ChevronLeft className="h-4 w-4" />
               <span className="sr-only">Previous page</span>
@@ -147,7 +147,7 @@ export function ApiDocumentList({
               size="sm"
               onClick={() => onPageChange(pagination.currentPage + 1)}
               disabled={pagination.currentPage >= pagination.pageCount}
-              className="h-8 w-8 p-0" // Make buttons smaller for pagination
+              className="h-8 w-8 p-0"
             >
               <ChevronRight className="h-4 w-4" />
               <span className="sr-only">Next page</span>

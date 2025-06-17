@@ -15,8 +15,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Loader2, AlertTriangle, Download, FileWarning } from 'lucide-react';
 import SwaggerUI from "swagger-ui-react";
-import "swagger-ui-react/swagger-ui.css"; // Import Swagger UI styles
-import YAML from 'js-yaml'; // For parsing YAML
+import "swagger-ui-react/swagger-ui.css";
+import YAML from 'js-yaml';
 
 interface ApiDocumentDetailModalProps {
   document: ApiDocumentMetadata | null;
@@ -30,7 +30,6 @@ export function ApiDocumentDetailModal({ document, isOpen, onClose }: ApiDocumen
   const [fetchSpecError, setFetchSpecError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Check if document.id exists before constructing URL
     if (isOpen && document && document.id && (document.format === 'openapi-json' || document.format === 'openapi-yaml')) {
       const specContentUrl = `/api/api-documents/file/${document.id}`;
       const fetchSpec = async () => {
@@ -40,13 +39,13 @@ export function ApiDocumentDetailModal({ document, isOpen, onClose }: ApiDocumen
         try {
           const response = await fetch(specContentUrl);
           if (!response.ok) {
-            const errorBody = await response.text(); // Try to get more info from error
+            const errorBody = await response.text();
             throw new Error(`Failed to fetch spec: ${response.status} ${response.statusText}. Server says: ${errorBody}`);
           }
           const rawContent = await response.text();
           if (document.format === 'openapi-yaml') {
             setSpecContent(YAML.load(rawContent));
-          } else { // openapi-json
+          } else {
             setSpecContent(JSON.parse(rawContent));
           }
         } catch (error: any) {
@@ -77,13 +76,11 @@ export function ApiDocumentDetailModal({ document, isOpen, onClose }: ApiDocumen
     }
   };
 
-  // Download button now directly links to the file-serving API route
-  // The API route's Content-Disposition header will suggest how the browser handles it.
   const downloadButtonUrl = document?.id ? `/api/api-documents/file/${document.id}` : '#';
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => { if (!open) onClose(); }}>
-      <DialogContent className="max-w-3xl md:max-w-4xl lg:max-w-5xl xl:max-w-6xl h-[90vh] flex flex-col"> {/* Responsive max-width */}
+      <DialogContent className="max-w-3xl md:max-w-4xl lg:max-w-5xl xl:max-w-6xl h-[90vh] flex flex-col">
         <DialogHeader className="flex-shrink-0">
           <DialogTitle className="truncate pr-10">{document.title || document.fileName}</DialogTitle>
           <DialogDescription>
@@ -110,7 +107,7 @@ export function ApiDocumentDetailModal({ document, isOpen, onClose }: ApiDocumen
             </div>
           )}
           {!isLoadingSpec && !fetchSpecError && specContent && (document.format === 'openapi-json' || document.format === 'openapi-yaml') && (
-            <div className="swagger-ui-container bg-background text-foreground"> {/* Ensure this container styles Swagger UI appropriately for your theme */}
+            <div className="swagger-ui-container bg-background text-foreground">
               <SwaggerUI spec={specContent} />
             </div>
           )}
@@ -139,7 +136,7 @@ export function ApiDocumentDetailModal({ document, isOpen, onClose }: ApiDocumen
 
         <DialogFooter className="flex-shrink-0 pt-4 border-t">
           <Button variant="outline" asChild disabled={!document?.id}>
-            <a href={downloadButtonUrl} download={document.fileName}> {/* `download` attribute suggests filename */}
+            <a href={downloadButtonUrl} download={document.fileName}>
               <Download className="mr-2 h-4 w-4" /> Download Original
             </a>
           </Button>

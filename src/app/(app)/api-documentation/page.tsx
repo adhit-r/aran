@@ -25,7 +25,7 @@ export default function ApiDocumentationPage() {
 
   const [pagination, setPagination] = useState<PaginationState>({
     total: 0,
-    limit: 10, // Default items per page
+    limit: 10,
     offset: 0,
     currentPage: 1,
     pageCount: 0,
@@ -34,11 +34,10 @@ export default function ApiDocumentationPage() {
   const fetchApiDocuments = useCallback(async (pageNumber: number = 1) => {
     setIsLoadingDocs(true);
     setFetchDocsError(null);
-    const currentLimit = pagination.limit; // Use current limit from state
+    const currentLimit = pagination.limit;
     const offset = (pageNumber - 1) * currentLimit;
 
     try {
-      // TODO: Add other query params like orderBy, orderDirection, filters if needed
       const response = await fetch(`/api/api-documents?limit=${currentLimit}&offset=${offset}`);
       if (!response.ok) {
         const errorResult = await response.json();
@@ -50,15 +49,14 @@ export default function ApiDocumentationPage() {
     } catch (error: any) {
       console.error("Error fetching API documents:", error);
       setFetchDocsError(error.message || "An unexpected error occurred.");
-      // Do not show toast here for initial load, ApiDocumentList will show error state
-      // toast.error("Failed to load API documents.", { description: error.message });
+      // Removed toast from here to avoid duplicate error display with ApiDocumentList
     } finally {
       setIsLoadingDocs(false);
     }
-  }, [pagination.limit]); // Dependency on pagination.limit if it can change
+  }, [pagination.limit]);
 
   useEffect(() => {
-    fetchApiDocuments(1); // Fetch first page on initial load
+    fetchApiDocuments(1);
   }, [fetchApiDocuments]);
 
   const handleUploadSuccess = (uploadedDocument: ApiDocumentMetadata) => {
@@ -66,51 +64,37 @@ export default function ApiDocumentationPage() {
     toast.success(`Document "${uploadedDocument.fileName}" uploaded successfully!`, {
       description: `ID: ${uploadedDocument.id}, Format: ${uploadedDocument.format}`,
     });
-    fetchApiDocuments(1); // Refresh the list, go to first page to see the new item (assuming default sort by new)
+    fetchApiDocuments(1);
   };
 
   const handleSelectDocument = (document: ApiDocumentMetadata) => {
     const fetchFullDocumentDetails = async () => {
       try {
         toast.loading("Fetching document details...", { id: "loading-doc-details"});
-        // The file serving endpoint now returns the file content directly, not metadata + downloadUrl
-        // The ApiDocumentDetailModal will use document.id to construct the file URL if needed,
-        // or use document.storagePath if we decide to make that directly usable (e.g. via a GET route that serves based on storagePath)
-        // For now, the modal primarily needs the metadata. The downloadUrl for the *original* file could be generated
-        // by a separate API if we don't want to expose storagePath directly or need signed URLs.
-        // The current /api/api-documents/[documentId] route returns metadata WITHOUT downloadUrl.
-        // The modal will need the document.id to construct the file content URL: /api/api-documents/file/[document.id]
-
-        // No need to re-fetch metadata if the list item already has all required fields for the modal.
-        // The downloadUrl for the spec content is now implicitly /api/api-documents/file/{document.id}
-        // So, we can just use the document object passed from the list.
-        // However, the prompt for the modal suggested it would fetch from document.downloadUrl.
-        // Let's stick to the design where the modal gets the *metadata* and constructs its own fetch URL for content.
-        // The `document` object from the list should be sufficient for the modal's metadata display.
-        // The special downloadUrl for the SwaggerUI component to fetch spec content is /api/api-documents/file/{document.id}
-
-        const documentWithPotentialDownloadUrl = {
-            ...document,
-            // This is the URL the SwaggerUI component inside the modal will use to fetch the spec content
-            downloadUrl: `/api/api-documents/file/${document.id}`
-        };
-
-        setSelectedDocumentForModal(documentWithPotentialDownloadUrl);
-        setIsDetailModalOpen(true);
-        toast.dismiss("loading-doc-details"); // Dismiss loading toast only after modal state is set
-      } catch (error: any) { // This catch block might not be strictly necessary if not re-fetching
+        const response = await fetch(`/api/api-documents/${document.id}`);
         toast.dismiss("loading-doc-details");
-        console.error("Error preparing document details for modal:", error);
-        toast.error("Failed to prepare document details for modal.", { description: error.message });
+
+        if (!response.ok) {
+          const errorResult = await response.json();
+          throw new Error(errorResult.error || `Failed to fetch document details: ${response.status}`);
+        }
+        const fullDocumentData: ApiDocumentMetadata = await response.json();
+        // The modal itself will construct the /api/api-documents/file/ID URL
+        // So, we pass the metadata which includes the ID.
+        setSelectedDocumentForModal(fullDocumentData);
+        setIsDetailModalOpen(true);
+      } catch (error: any) {
+        toast.dismiss("loading-doc-details");
+        console.error("Error fetching full document details:", error);
+        toast.error("Failed to load document details.", { description: error.message });
       }
     };
-    fetchFullDocumentDetails(); // Call the async function
+    fetchFullDocumentDetails();
   };
 
   const handlePageChange = (newPage: number) => {
     fetchApiDocuments(newPage);
   };
-
 
   return (
     <div className="flex flex-col gap-8 p-4 md:p-6">
