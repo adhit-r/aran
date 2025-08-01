@@ -10,6 +10,8 @@ interface ApiTreeViewNodeProps {
   level: number;
   isExpanded: boolean;
   isSelected: boolean;
+  expandedNodeIds: Set<string>; // Add this to access child expansion states
+  selectedApiNodeId?: string | null; // Add this to access child selection states
   onToggleExpand: (nodeId: string) => void;
   onNodeSelect: (node: TreeNode) => void; // Pass the whole node
 }
@@ -19,6 +21,8 @@ const ApiTreeViewNode: React.FC<ApiTreeViewNodeProps> = ({
   level,
   isExpanded,
   isSelected,
+  expandedNodeIds,
+  selectedApiNodeId,
   onToggleExpand,
   onNodeSelect,
 }) => {
@@ -98,8 +102,10 @@ const ApiTreeViewNode: React.FC<ApiTreeViewNodeProps> = ({
               level={level + 1}
               isExpanded={expandedNodeIds.has(childNode.id)} // Pass child's expansion state
               isSelected={selectedApiNodeId === childNode.id && !!childNode.apiId} // Pass child's selection state
+              expandedNodeIds={expandedNodeIds} // Pass down the set
+              selectedApiNodeId={selectedApiNodeId} // Pass down the selected ID
               onToggleExpand={onToggleExpand} // Pass down from parent
-              onNodeSelect={onApiSelect} // Pass down from parent (renamed from onNodeSelect for clarity)
+              onNodeSelect={onNodeSelect} // Pass down from parent
             />
           ))}
         </div>

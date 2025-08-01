@@ -31,8 +31,10 @@ import { ScrollArea } from "@/components/ui/scroll-area"; // For potentially scr
 
 // Ensure ApiEntry here is compatible with TreeApiEntry, or map it.
 // For now, let's make them compatible by adding optional method.
-interface ApiEntry extends TreeApiEntry {
-// id, name, endpoint are from TreeApiEntry
+interface ApiEntry {
+  id: string;
+  name: string;
+  endpoint: string;
   method?: string; // Added method
   category: string;
   owner: string;
@@ -159,63 +161,6 @@ export default function ApiCatalogPage() {
   const [newApiMethod, setNewApiMethod] = React.useState("GET"); // Added method state
   const [newApiCategory, setNewApiCategory] = React.useState("");
   const [newApiOwner, setNewApiOwner] = React.useState("");
-  name: string;
-  endpoint: string;
-  category: string;
-  owner: string;
-  status: "active" | "deprecated" | "development";
-  documentationUrl: string;
-}
-
-const initialApis: ApiEntry[] = [
-  { 
-    id: "1", 
-    name: "JSONPlaceholder API", 
-    endpoint: "https://jsonplaceholder.typicode.com/posts", 
-    category: "Mock Data/Testing", 
-    owner: "Public", 
-    status: "active", 
-    documentationUrl: "https://jsonplaceholder.typicode.com/" 
-  },
-  { 
-    id: "2", 
-    name: "OpenWeatherMap API", 
-    endpoint: "https://api.openweathermap.org/data/2.5/weather", 
-    category: "Weather", 
-    owner: "OpenWeatherMap", 
-    status: "active", 
-    documentationUrl: "https://openweathermap.org/api" 
-  },
-  { 
-    id: "3", 
-    name: "The Cat API", 
-    endpoint: "https://api.thecatapi.com/v1/images/search", 
-    category: "Animals/Entertainment", 
-    owner: "TheCatAPI", 
-    status: "active", 
-    documentationUrl: "https://docs.thecatapi.com/" 
-  },
-  { 
-    id: "4", 
-    name: "Public APIs List", 
-    endpoint: "https://api.publicapis.org/entries", 
-    category: "API Directory", 
-    owner: "Public APIs GitHub", 
-    status: "active", 
-    documentationUrl: "https://github.com/public-apis/public-apis"
-  },
-];
-
-export default function ApiCatalogPage() {
-  const [searchTerm, setSearchTerm] = React.useState("");
-  const [apis, setApis] = React.useState<ApiEntry[]>(initialApis);
-  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
-
-  // Form state for new API
-  const [newApiName, setNewApiName] = React.useState("");
-  const [newApiEndpoint, setNewApiEndpoint] = React.useState("");
-  const [newApiCategory, setNewApiCategory] = React.useState("");
-  const [newApiOwner, setNewApiOwner] = React.useState("");
   const [newApiDocsUrl, setNewApiDocsUrl] = React.useState("");
 
 
@@ -338,17 +283,6 @@ export default function ApiCatalogPage() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
-      </div>
-
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
-          type="search"
-          placeholder="Search APIs by name, endpoint, category, or owner..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="pl-10 w-full"
-        />
       </div>
 
       <div className="flex items-center justify-between">
