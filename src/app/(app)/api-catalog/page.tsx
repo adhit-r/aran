@@ -23,11 +23,22 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card"; // Added CardContent
-import { PlusCircle, Search, ExternalLink, List, FolderTree } from "lucide-react"; // Added List, FolderTree
-import { buildApiTree, parseEndpointPath, ApiEntry as TreeApiEntry } from '@/lib/api-tree-utils'; // Tree utils
-import ApiTreeView from '@/components/api-catalog/ApiTreeView'; // Tree view component
-import { ScrollArea } from "@/components/ui/scroll-area"; // For potentially scrollable tree view
+import { Card, CardContent } from "@/components/ui/card";
+import { PlusCircle, Search, ExternalLink, List, FolderTree, Grid3X3, Download } from "lucide-react";
+import { buildApiTree, parseEndpointPath } from '@/lib/api-tree-utils';
+import ApiTreeView from '@/components/api-catalog/ApiTreeView';
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { AdvancedFilters } from '@/components/api-catalog/AdvancedFilters';
+import { SortableTableHeader } from '@/components/api-catalog/SortableTableHeader';
+import { ApiGridView } from '@/components/api-catalog/ApiGridView';
+import { sortApis, filterApis, toggleSortDirection } from '@/lib/api-filtering';
+import { 
+  SortConfig, 
+  FilterConfig, 
+  SortField, 
+  DEFAULT_FILTER_CONFIG, 
+  DEFAULT_SORT_CONFIG 
+} from '@/types/filtering';
 
 // Ensure ApiEntry here is compatible with TreeApiEntry, or map it.
 // For now, let's make them compatible by adding optional method.
@@ -150,10 +161,14 @@ export default function ApiCatalogPage() {
   const [searchTerm, setSearchTerm] = React.useState("");
   const [apis, setApis] = React.useState<ApiEntry[]>(initialApis);
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
-  const [viewMode, setViewMode] = React.useState<'table' | 'tree'>('table'); // View mode state
+  const [viewMode, setViewMode] = React.useState<'table' | 'tree' | 'grid'>('table');
   const [selectedApiIdInTree, setSelectedApiIdInTree] = React.useState<string | null>(null);
   const [isApiDetailModalOpen, setIsApiDetailModalOpen] = React.useState(false);
-
+  
+  // Advanced filtering and sorting state
+  const [sortConfig, setSortConfig] = React.useState<SortConfig>(DEFAULT_SORT_CONFIG);
+  const [filterConfig, setFilterConfig] = React.useState<FilterConfig>(DEFAULT_FILTER_CONFIG);
+  const [showAdvancedFilters, setShowAdvancedFilters] = React.useState(false);
 
   // Form state for new API
   const [newApiName, setNewApiName] = React.useState("");
@@ -163,23 +178,36 @@ export default function ApiCatalogPage() {
   const [newApiOwner, setNewApiOwner] = React.useState("");
   const [newApiDocsUrl, setNewApiDocsUrl] = React.useState("");
 
+  // Computed filtered and sorted APIs
+  const processedApis = React.useMemo(() => {
+    const filtered = filterApis(apis, filterConfig, searchTerm);
+    return sortApis(filtered, sortConfig);
+  }, [apis, filterConfig, searchTerm, sortConfig]);
 
-  const filteredApis = React.useMemo(() =>
-    apis.filter(
-      (api) =>
-        api.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        api.endpoint.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        api.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        api.owner.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (api.method && api.method.toLowerCase().includes(searchTerm.toLowerCase()))
-    ), [apis, searchTerm]
-  );
-
-  // Memoize tree data generation
+  // Memoize tree data generation - use all APIs, not filtered ones for full tree structure
   const apiTreeData = React.useMemo(
-    () => buildApiTree(apis, parseEndpointPath), // Use all APIs for the tree structure
+    () => buildApiTree(apis),
     [apis]
   );
+
+  // Handle sorting
+  const handleSort = (field: SortField) => {
+    setSortConfig(prevSort => ({
+      field,
+      direction: prevSort.field === field 
+        ? toggleSortDirection(prevSort.direction)
+        : 'asc'
+    }));
+  };
+
+  // Handle filtering
+  const handleFilterChange = (newFilterConfig: FilterConfig) => {
+    setFilterConfig(newFilterConfig);
+  };
+
+  const handleClearFilters = () => {
+    setFilterConfig(DEFAULT_FILTER_CONFIG);
+  };
 
   const handleAddApi = () => {
     const newApi: ApiEntry = {
@@ -215,6 +243,29 @@ export default function ApiCatalogPage() {
     return apis.find(api => api.id === selectedApiIdInTree);
   }, [apis, selectedApiIdInTree]);
 
+  // Export functionality
+  const handleExportData = () => {
+    const dataToExport = {
+      apis: processedApis,
+      filters: filterConfig,
+      sort: sortConfig,
+      exportedAt: new Date().toISOString()
+    };
+    
+    const blob = new Blob([JSON.stringify(dataToExport, null, 2)], {
+      type: 'application/json'
+    });
+    
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `api-catalog-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
 
   const getStatusBadgeVariant = (status: ApiEntry["status"]) => {
     switch (status) {
@@ -230,60 +281,81 @@ export default function ApiCatalogPage() {
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
         <h1 className="font-headline text-3xl font-semibold">API Catalog</h1>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <PlusCircle className="mr-2 h-4 w-4" /> Add New API
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[525px]">
-            <DialogHeader>
-              <DialogTitle>Add New API</DialogTitle>
-              <DialogDescription>
-                Enter the details for the new API to add it to the catalog.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="name" className="text-right">Name</Label>
-                <Input id="name" value={newApiName} onChange={(e) => setNewApiName(e.target.value)} className="col-span-3" />
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleExportData}
+            className="flex items-center gap-2"
+          >
+            <Download className="h-4 w-4" />
+            Export ({processedApis.length})
+          </Button>
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <Button>
+                <PlusCircle className="mr-2 h-4 w-4" /> Add New API
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[525px]">
+              <DialogHeader>
+                <DialogTitle>Add New API</DialogTitle>
+                <DialogDescription>
+                  Enter the details for the new API to add it to the catalog.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="name" className="text-right">Name</Label>
+                  <Input id="name" value={newApiName} onChange={(e) => setNewApiName(e.target.value)} className="col-span-3" />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="endpoint" className="text-right">Endpoint</Label>
+                  <Input id="endpoint" value={newApiEndpoint} onChange={(e) => setNewApiEndpoint(e.target.value)} className="col-span-3" placeholder="/v1/example" />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="method" className="text-right">Method</Label>
+                  <select id="method" value={newApiMethod} onChange={(e) => setNewApiMethod(e.target.value)} className="col-span-3 border p-2 rounded-md">
+                    <option value="GET">GET</option>
+                    <option value="POST">POST</option>
+                    <option value="PUT">PUT</option>
+                    <option value="DELETE">DELETE</option>
+                    <option value="PATCH">PATCH</option>
+                    <option value="OPTIONS">OPTIONS</option>
+                    <option value="HEAD">HEAD</option>
+                  </select>
+                </div>
+                 <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="category" className="text-right">Category</Label>
+                  <Input id="category" value={newApiCategory} onChange={(e) => setNewApiCategory(e.target.value)} className="col-span-3" />
+                </div>
+                 <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="owner" className="text-right">Owner</Label>
+                  <Input id="owner" value={newApiOwner} onChange={(e) => setNewApiOwner(e.target.value)} className="col-span-3" />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="docsUrl" className="text-right">Docs URL</Label>
+                  <Input id="docsUrl" value={newApiDocsUrl} onChange={(e) => setNewApiDocsUrl(e.target.value)} className="col-span-3" placeholder="/docs/my-api" />
+                </div>
               </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="endpoint" className="text-right">Endpoint</Label>
-                <Input id="endpoint" value={newApiEndpoint} onChange={(e) => setNewApiEndpoint(e.target.value)} className="col-span-3" placeholder="/v1/example" />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="method" className="text-right">Method</Label>
-                <select id="method" value={newApiMethod} onChange={(e) => setNewApiMethod(e.target.value)} className="col-span-3 border p-2 rounded-md">
-                  <option value="GET">GET</option>
-                  <option value="POST">POST</option>
-                  <option value="PUT">PUT</option>
-                  <option value="DELETE">DELETE</option>
-                  <option value="PATCH">PATCH</option>
-                  <option value="OPTIONS">OPTIONS</option>
-                  <option value="HEAD">HEAD</option>
-                </select>
-              </div>
-               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="category" className="text-right">Category</Label>
-                <Input id="category" value={newApiCategory} onChange={(e) => setNewApiCategory(e.target.value)} className="col-span-3" />
-              </div>
-               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="owner" className="text-right">Owner</Label>
-                <Input id="owner" value={newApiOwner} onChange={(e) => setNewApiOwner(e.target.value)} className="col-span-3" />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="docsUrl" className="text-right">Docs URL</Label>
-                <Input id="docsUrl" value={newApiDocsUrl} onChange={(e) => setNewApiDocsUrl(e.target.value)} className="col-span-3" placeholder="/docs/my-api" />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
-              <Button type="submit" onClick={handleAddApi}>Add API</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+              <DialogFooter>
+                <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
+                <Button type="submit" onClick={handleAddApi}>Add API</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
+
+      {/* Advanced Filters */}
+      <AdvancedFilters
+        apis={apis}
+        filterConfig={filterConfig}
+        onFilterChange={handleFilterChange}
+        onClearFilters={handleClearFilters}
+        isVisible={showAdvancedFilters}
+        onToggleVisibility={() => setShowAdvancedFilters(!showAdvancedFilters)}
+      />
 
       <div className="flex items-center justify-between">
         <div className="relative w-full max-w-md">
@@ -301,6 +373,9 @@ export default function ApiCatalogPage() {
             <Button variant={viewMode === 'table' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('table')}>
                 <List className="mr-2 h-4 w-4" /> Table
             </Button>
+            <Button variant={viewMode === 'grid' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('grid')}>
+                <Grid3X3 className="mr-2 h-4 w-4" /> Grid
+            </Button>
             <Button variant={viewMode === 'tree' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('tree')}>
                 <FolderTree className="mr-2 h-4 w-4" /> Tree
             </Button>
@@ -313,18 +388,48 @@ export default function ApiCatalogPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Method</TableHead>
-                <TableHead>Endpoint</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Owner</TableHead>
-                <TableHead>Status</TableHead>
+                <SortableTableHeader
+                  field="name"
+                  label="Name"
+                  sortConfig={sortConfig}
+                  onSort={handleSort}
+                />
+                <SortableTableHeader
+                  field="method"
+                  label="Method"
+                  sortConfig={sortConfig}
+                  onSort={handleSort}
+                />
+                <SortableTableHeader
+                  field="endpoint"
+                  label="Endpoint"
+                  sortConfig={sortConfig}
+                  onSort={handleSort}
+                />
+                <SortableTableHeader
+                  field="category"
+                  label="Category"
+                  sortConfig={sortConfig}
+                  onSort={handleSort}
+                />
+                <SortableTableHeader
+                  field="owner"
+                  label="Owner"
+                  sortConfig={sortConfig}
+                  onSort={handleSort}
+                />
+                <SortableTableHeader
+                  field="status"
+                  label="Status"
+                  sortConfig={sortConfig}
+                  onSort={handleSort}
+                />
                 <TableHead>Documentation</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredApis.length > 0 ? (
-                filteredApis.map((api) => (
+              {processedApis.length > 0 ? (
+                processedApis.map((api) => (
                   <TableRow key={api.id}>
                     <TableCell className="font-medium">{api.name}</TableCell>
                     <TableCell>
@@ -357,6 +462,10 @@ export default function ApiCatalogPage() {
             </TableBody>
           </Table>
         </Card>
+      )}
+
+      {viewMode === 'grid' && (
+        <ApiGridView apis={processedApis} />
       )}
 
       {viewMode === 'tree' && (
