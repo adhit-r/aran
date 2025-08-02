@@ -64,9 +64,7 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
             <Checkbox
               id={`${filterType}-${option}`}
               checked={filterConfig[filterType].includes(option)}
-              onCheckedChange={(checked) =>
-                handleFilterToggle(filterType, option, !!checked)
-              }
+              onCheckedChange={getOnCheckedChange(filterType, option)}
             />
             <label
               htmlFor={`${filterType}-${option}`}
