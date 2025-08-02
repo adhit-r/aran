@@ -5,8 +5,8 @@ export function sortApis(apis: ApiEntry[], sortConfig: SortConfig): ApiEntry[] {
   return [...apis].sort((a, b) => {
     const { field, direction } = sortConfig;
     
-    let aValue: any;
-    let bValue: any;
+    let aValue: string | number;
+    let bValue: string | number;
     
     switch (field) {
       case 'name':
