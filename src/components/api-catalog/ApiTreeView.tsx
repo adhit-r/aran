@@ -65,6 +65,8 @@ const ApiTreeView: React.FC<ApiTreeViewProps> = ({
           level={0}
           isExpanded={expandedNodeIds.has(node.id)}
           isSelected={selectedApiNodeId === node.id && !!node.apiId}
+          expandedNodeIds={expandedNodeIds} // Pass the set
+          selectedApiNodeId={selectedApiNodeId} // Pass the selected ID
           onToggleExpand={handleToggleExpand}
           onNodeSelect={onApiSelect} // Pass the onApiSelect from props
         />
