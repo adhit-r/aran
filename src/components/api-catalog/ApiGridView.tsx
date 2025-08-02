@@ -91,7 +91,12 @@ export const ApiGridView: React.FC<ApiGridViewProps> = ({ apis }) => {
                   variant="ghost"
                   size="sm"
                   className="h-8 w-8 p-0 flex-shrink-0"
-                  onClick={() => handleCopyEndpoint(api.endpoint, api.id)}
+                  onClick={() => {
+                    if (api.endpoint) {
+                      handleCopyEndpoint(api.endpoint, api.id);
+                    }
+                  }}
+                  disabled={!api.endpoint}
                   title="Copy endpoint"
                 >
                   {copiedId === api.id ? (
