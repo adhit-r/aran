@@ -31,9 +31,13 @@ export function sortApis(apis: ApiEntry[], sortConfig: SortConfig): ApiEntry[] {
         break;
       case 'status':
         // Sort by status priority: active > development > deprecated
-        const statusPriority = { active: 3, development: 2, deprecated: 1 };
-        aValue = statusPriority[a.status || 'active'] || 0;
-        bValue = statusPriority[b.status || 'active'] || 0;
+        const statusPriority: Record<string, number> = { active: 3, development: 2, deprecated: 1 };
+        aValue = (a.status && statusPriority[a.status] !== undefined)
+          ? statusPriority[a.status]
+          : statusPriority['active'];
+        bValue = (b.status && statusPriority[b.status] !== undefined)
+          ? statusPriority[b.status]
+          : statusPriority['active'];
         break;
       default:
         aValue = '';
