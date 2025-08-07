@@ -1,232 +1,199 @@
 ---
-title: Welcome to Aran API Sentinel
-description: Your complete multi-tenant API security and governance platform
-image: /screenshots/dashboard.png
-tags: [overview, introduction]
+title: Aran API Sentinel Documentation
+description: Complete documentation for Aran API Sentinel - Multi-tenant API security and governance platform
 ---
 
-# Welcome to Aran API Sentinel
+# 🚀 Aran API Sentinel
 
-**Aran API Sentinel** is your comprehensive multi-tenant API security and governance platform, designed to protect and manage APIs in modern, distributed environments.
+Your complete multi-tenant API security and governance platform built with Next.js and PocketBase.
 
-![Aran API Sentinel Dashboard](/screenshots/dashboard.png)
-*Real-time API security monitoring and governance*
+## 🏗️ **Multi-Tenant Architecture**
 
-## 🚀 **What is Aran API Sentinel?**
+Aran features a complete multi-tenant architecture powered by **PocketBase**:
 
-Aran API Sentinel is a next-generation API security platform that combines:
+### **🏢 Company/Tenant Isolation:**
+- **Multi-Company Support**: Each company has isolated data and users
+- **Role-Based Access**: Admin, Manager, Analyst, Viewer roles per company
+- **Secure Data Separation**: Complete tenant isolation with PocketBase rules
+- **Company Branding**: Custom logos and settings per company
 
-- **🔐 Multi-Tenant Security**: Complete tenant isolation with PocketBase backend
-- **🤖 MCP Security**: Comprehensive Model Context Protocol protection for AI/ML applications
-- **📊 Real-time Monitoring**: Live API health and security analytics
-- **🛡️ Threat Detection**: Rule-based analysis and anomaly detection
-- **📚 API Governance**: Centralized API catalog and documentation management
+### **🔐 Authentication & Authorization:**
+- **PocketBase Auth**: Built-in authentication with multi-tenant support
+- **Real-time Updates**: Live data synchronization across all clients
+- **Session Management**: Secure session handling per tenant
+- **Audit Logging**: Comprehensive activity tracking per company
 
-## 🎯 **Key Features**
+## 🎯 **Core Features**
 
-### **🔍 API Discovery & Catalog**
-![API Discovery](/screenshots/api-discovery.png)
-*Automated API discovery using pattern matching and rule-based analysis*
+### **🔍 Automated API Discovery**
+Uses pattern matching and rule-based analysis to discover APIs from traffic data, providing a complete inventory.
 
-Discover and catalog all your APIs automatically:
-- **Pattern-based Discovery**: Find APIs in traffic data and code
-- **Centralized Catalog**: Organize APIs with metadata and documentation
-- **Search & Filter**: Find APIs quickly with advanced filtering
-- **Version Management**: Track API versions and changes
+### **📚 Centralized API Catalog**
+Offers a searchable, well-organized catalog of all discovered and registered APIs, complete with metadata and documentation links.
 
-### **🛡️ Threat Detection & Security**
-![Threat Detection](/screenshots/threat-detection.png)
-*Real-time threat detection with comprehensive security analysis*
+### **🛡️ API Security**
+Implements security best practices by helping you define, enforce, and monitor security policies across your APIs.
 
-Protect your APIs from threats:
-- **Real-time Monitoring**: Live threat detection and alerting
-- **Anomaly Detection**: Identify unusual API patterns
-- **Security Scoring**: Risk assessment for API endpoints
-- **Incident Response**: Automated threat mitigation
+### **🚨 Threat Detection**
+Proactively identifies and alerts on anomalous API traffic patterns and potential security threats using rule-based analysis.
 
-### **🤖 MCP Security for AI/ML**
-![MCP Security](/screenshots/mcp-security.png)
-*Comprehensive Model Context Protocol security monitoring*
+### **🤖 MCP Security**
+Comprehensive Model Context Protocol security for AI/ML applications, protecting against real-world threats like tool poisoning, line jumping, tool shadowing, prompt injection, broken authorization, and data exfiltration.
 
-Secure AI applications using Model Context Protocols:
-- **Tool Poisoning Detection**: Identify compromised MCP tools
-- **Line Jumping Prevention**: Stop AI bypassing validation
-- **Tool Shadowing Detection**: Detect malicious tool impersonation
-- **Prompt Injection Protection**: Prevent malicious prompt injection
-- **Authorization Enforcement**: Ensure proper AI permissions
+### **⚙️ Streamlined API Governance**
+Facilitates consistent governance, ensuring APIs adhere to organizational standards and compliance requirements.
 
-### **📊 Dashboard & Analytics**
-![Dashboard](/screenshots/dashboard.png)
-*Comprehensive dashboard with real-time metrics and insights*
+## 🛠️ **Quick Start**
 
-Monitor your API ecosystem:
-- **Real-time Metrics**: Live API health and performance data
-- **Security Posture**: Overall security status and trends
-- **Usage Analytics**: API usage patterns and optimization
-- **Custom Dashboards**: User-defined monitoring views
+### **Prerequisites:**
+- Node.js 18+ 
+- npm or yarn
 
-### **🔐 Multi-Tenant Architecture**
-![Login](/screenshots/login.png)
-*Secure multi-tenant authentication with company-specific access*
-
-Built for enterprise scale:
-- **Tenant Isolation**: Complete data separation between companies
-- **Role-Based Access**: Granular permissions per user
-- **Company Branding**: Custom logos and settings per tenant
-- **Audit Logging**: Comprehensive activity tracking
-
-## 🏗️ **Architecture Overview**
-
-### **Frontend (Next.js 15)**
-- **React 18**: Modern UI with server components
-- **Tailwind CSS**: Responsive design system
-- **Radix UI**: Accessible component library
-- **Recharts**: Data visualization and analytics
-
-### **Backend (PocketBase)**
-- **Multi-Tenant Database**: SQLite with tenant isolation
-- **Real-time Updates**: Live data synchronization
-- **Built-in Auth**: Authentication and authorization
-- **File Storage**: Secure file upload and management
-
-### **Security Features**
-- **MCP Security**: AI/ML application protection
-- **API Security**: Traditional API security measures
-- **Threat Detection**: Real-time security monitoring
-- **Compliance**: Audit and compliance features
-
-## 🚀 **Quick Start**
-
-### **1. Installation**
+### **1. Install Dependencies:**
 ```bash
-# Clone the repository
-git clone https://github.com/aran-api-sentinel/aran.git
-cd aran
-
-# Install dependencies
 npm install
 ```
 
-### **2. Start the Application**
+### **2. Start PocketBase Backend:**
 ```bash
-# Start both PocketBase and Next.js
+npm run pocketbase
+```
+This starts PocketBase at `http://127.0.0.1:8090`
+
+### **3. Start Next.js Frontend:**
+```bash
+npm run dev
+```
+This starts Aran at `http://localhost:9002`
+
+### **4. Start Both Together:**
+```bash
 npm run dev:full
 ```
 
-### **3. Access the Platform**
-- **Application**: http://localhost:9002
-- **PocketBase Admin**: http://127.0.0.1:8090/_/
+## 📊 **PocketBase Admin Panel**
 
-### **4. First Setup**
-1. Create your first company in PocketBase admin
-2. Add users with appropriate roles
-3. Start discovering and securing your APIs
+Access the PocketBase admin panel at `http://127.0.0.1:8090/_/` to:
+
+- **Manage Companies**: Create and configure tenant companies
+- **User Management**: Add users and assign roles per company
+- **Data Management**: View and manage all collections
+- **Real-time Monitoring**: Monitor API usage and performance
+
+## 🏗️ **Multi-Tenant Database Schema**
+
+### **Collections:**
+- **`companies`**: Company/tenant information and settings
+- **`users`**: Multi-tenant user accounts with role-based access
+- **`api_documents`**: API specification files per company
+- **`api_catalog`**: API catalog entries per company
+- **`mcp_implementations`**: MCP implementations per company
+- **`security_policies`**: Security policies per company
+- **`audit_logs`**: Activity logs per company
+
+### **Security Rules:**
+All collections include tenant isolation rules:
+```javascript
+// Example: Users can only access their company's data
+listRule: "@request.auth.id != '' && @request.auth.record.company = company"
+```
+
+## 🔧 **Development**
+
+### **Environment Variables:**
+Create `.env.local`:
+```bash
+NEXT_PUBLIC_POCKETBASE_URL=http://127.0.0.1:8090
+NEXT_PUBLIC_APP_URL=http://localhost:9002
+```
+
+### **Available Scripts:**
+- `npm run dev` - Start Next.js development server
+- `npm run pocketbase` - Start PocketBase backend
+- `npm run dev:full` - Start both servers together
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
+- `npm run typecheck` - Run TypeScript checks
+
+## 📚 **Documentation**
+
+### **📖 Live Documentation**
+- **GitHub Pages**: [https://radhi1991.github.io/aran](https://radhi1991.github.io/aran)
+- **Auto-deployed**: Updates automatically on push to main branch
+- **Search**: Full-text search across all documentation
+
+### **🔧 Documentation Development**
+```bash
+# Start documentation development server
+npm run docs:dev
+
+# Build documentation
+npm run docs:build
+
+# Preview built documentation
+npm run docs:preview
+```
+
+## 🚀 **Production Deployment**
+
+### **Docker Deployment:**
+```bash
+# Build and run with Docker Compose
+docker-compose up -d
+```
+
+### **Manual Deployment:**
+```bash
+# Build the application
+npm run build
+
+# Start PocketBase (production)
+./pb_data/pocketbase serve --http="0.0.0.0:8090" --dir="./pb_data"
+
+# Start Next.js (production)
+npm start
+```
+
+## 📈 **Multi-Tenant Benefits**
+
+### **✅ For SaaS Providers:**
+- **Scalable Architecture**: Easy to add new companies
+- **Data Isolation**: Complete separation between tenants
+- **Custom Branding**: Company-specific logos and settings
+- **Usage Analytics**: Per-company usage tracking
+
+### **✅ For Enterprise:**
+- **Department Isolation**: Separate workspaces per department
+- **Role-Based Security**: Granular permissions per user
+- **Audit Compliance**: Complete activity logging
+- **Custom Policies**: Company-specific security rules
+
+### **✅ For Developers:**
+- **Real-time Updates**: Live data synchronization
+- **Admin Panel**: Easy data management interface
+- **API-First**: RESTful API for all operations
+- **Type Safety**: Full TypeScript support
+
+## 🔐 **Security Features**
+
+- **Tenant Isolation**: Complete data separation
+- **Role-Based Access**: Granular permissions
+- **Audit Logging**: Comprehensive activity tracking
+- **Real-time Security**: Live threat detection
+- **API Rate Limiting**: Per-company usage limits
+- **Secure File Storage**: Encrypted file handling
+- **MCP Security**: Comprehensive AI/ML security protecting against real-world MCP threats
 
 ## 📚 **Documentation Sections**
 
-### **Getting Started**
-- **[Installation Guide](/getting-started/installation)**: Complete setup instructions
-- **[Multi-Tenant Setup](/multi-tenant/setup)**: Configure multi-tenant architecture
-
-### **Features**
-- **[Features Overview](/features/overview)**: Complete feature guide
-- **[API Discovery](/features/api-discovery)**: Automated API discovery
-- **[Threat Detection](/features/threat-detection)**: Security monitoring
-- **[API Catalog](/features/api-catalog)**: API management
-- **[MCP Security](/features/mcp-security)**: AI/ML application security
-
-### **Development & Planning**
-- **[Product Roadmap](/roadmap)**: Future development plans and features
-- **[API Reference](/api-reference)**: Technical API documentation
-- **[Security Guide](/security-guide)**: Security best practices
-
-## 🎯 **Use Cases**
-
-### **🏢 Enterprise Organizations**
-- **Multi-Department Management**: Separate workspaces per department
-- **Compliance Requirements**: SOC 2, GDPR, HIPAA compliance
-- **Security Governance**: Centralized security policy management
-- **Audit Trail**: Complete activity logging and reporting
-
-### **🚀 SaaS Providers**
-- **Multi-Tenant SaaS**: Complete tenant isolation
-- **White-Labeling**: Custom branding per customer
-- **Usage Analytics**: Per-tenant usage tracking
-- **Scalable Architecture**: Easy to add new tenants
-
-### **🔒 Security Teams**
-- **API Security Posture**: Complete API security overview
-- **Threat Detection**: Real-time security monitoring
-- **Incident Response**: Automated threat mitigation
-- **Compliance Reporting**: Automated compliance documentation
-
-### **🤖 AI/ML Teams**
-- **MCP Security**: Protect AI applications using Model Context Protocols
-- **Tool Validation**: Ensure MCP tools are legitimate and secure
-- **Access Control**: Properly manage AI permissions
-- **Threat Detection**: Identify AI-specific security threats
-
-## 🔗 **Integration Ecosystem**
-
-### **Cloud Providers**
-- **AWS**: Native AWS integration and services
-- **Azure**: Microsoft Azure integration
-- **Google Cloud**: GCP services and APIs
-- **Kubernetes**: Container orchestration support
-
-### **Development Tools**
-- **CI/CD**: GitHub Actions, GitLab CI, Jenkins
-- **API Gateways**: Kong, AWS API Gateway, Azure API Management
-- **Monitoring**: Prometheus, Grafana, DataDog
-- **Documentation**: Swagger, OpenAPI, Postman
-
-## 📈 **Performance & Scalability**
-
-### **Performance Metrics**
-- **<100ms Response Time**: Fast API responses
-- **99.9% Uptime**: High availability
-- **Real-time Updates**: Live data synchronization
-- **Scalable Architecture**: Handle enterprise workloads
-
-### **Security Metrics**
-- **>95% Threat Detection**: High accuracy threat detection
-- **<1s Incident Response**: Fast threat mitigation
-- **Zero False Positives**: Accurate threat identification
-- **Comprehensive Coverage**: Complete API security
-
-## 🤝 **Community & Support**
-
-### **Open Source**
-- **GitHub**: [github.com/aran-api-sentinel](https://github.com/aran-api-sentinel)
-- **Contributing**: Welcome contributions and pull requests
-- **Issues**: Report bugs and request features
-- **Discussions**: Community forums and Q&A
-
-### **Documentation**
-- **Comprehensive Guides**: Complete feature documentation
-- **API Reference**: Technical API documentation
-- **Video Tutorials**: Step-by-step video guides
-- **Best Practices**: Security and implementation guides
-
-## 🚀 **Future Roadmap**
-
-Check out our **[Product Roadmap](/roadmap)** for upcoming features and development plans:
-
-- **Phase 1**: Enhanced security and analytics (Q2 2025)
-- **Phase 2**: Enterprise features and AI integration (Q3 2025)
-- **Phase 3**: Developer tools and DevOps integration (Q4 2025)
-- **Phase 4**: Global scale and advanced security (Q1 2026)
-- **Phase 5**: Innovation and ecosystem expansion (Q2-Q4 2026)
-
-## 🎉 **Get Started Today**
-
-Ready to secure and govern your APIs? Start with Aran API Sentinel:
-
-1. **[Quick Installation](/getting-started/installation)**: Get up and running in minutes
-2. **[Multi-Tenant Setup](/multi-tenant/setup)**: Configure your first company
-3. **[Feature Exploration](/features/overview)**: Learn about all available features
-4. **[Roadmap Review](/roadmap)**: See what's coming next
+- **Fumadocs MDX**: Modern, type-safe documentation system
+- **API Reference**: PocketBase REST API documentation
+- **Admin Guide**: Multi-tenant administration guide
+- **Developer Guide**: Integration and customization
+- **Security Guide**: Best practices and compliance
+- **MCP Security Guide**: Comprehensive AI/ML security documentation
 
 ---
 
-**Aran API Sentinel** - Your complete multi-tenant API security and governance platform with comprehensive MCP Security! 🚀 
+**Aran API Sentinel** - Your complete multi-tenant API security and governance platform with **comprehensive MCP Security**! 🚀 

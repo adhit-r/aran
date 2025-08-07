@@ -2,8 +2,6 @@
 
 Built with Next.js for a responsive frontend and **PocketBase** for multi-tenant backend, Aran API Sentinel is your solution for modern API lifecycle management and security.
 
-![Aran API Sentinel Dashboard](./screenshots/dashboard.png)
-
 ## 🚀 **Multi-Tenant Architecture**
 
 Aran now features a complete multi-tenant architecture powered by **PocketBase**:
@@ -19,40 +17,6 @@ Aran now features a complete multi-tenant architecture powered by **PocketBase**
 - **Real-time Updates**: Live data synchronization across all clients
 - **Session Management**: Secure session handling per tenant
 - **Audit Logging**: Comprehensive activity tracking per company
-
-## 🖼️ **UI Screenshots**
-
-### **📊 Dashboard Overview**
-![Dashboard](./screenshots/dashboard.png)
-*Comprehensive dashboard with API health metrics, security posture, and real-time monitoring*
-
-### **🔍 API Discovery**
-![API Discovery](./screenshots/api-discovery.png)
-*Automated API discovery using pattern matching and rule-based analysis*
-
-### **🛡️ Threat Detection**
-![Threat Detection](./screenshots/threat-detection.png)
-*Real-time threat detection with rule-based analysis and anomaly scoring*
-
-### **📚 API Catalog**
-![API Catalog](./screenshots/api-catalog.png)
-*Centralized API catalog with search, filtering, and governance features*
-
-### **🤖 MCP Security**
-![MCP Security](./screenshots/mcp-security.png)
-*Model Context Protocol security monitoring for AI/ML applications*
-
-### **🔐 Multi-Tenant Login**
-![Login](./screenshots/login.png)
-*Secure multi-tenant authentication with company-specific access*
-
-### **📄 API Documentation**
-![API Documentation](./screenshots/api-documentation.png)
-*API documentation management with file upload and specification viewing*
-
-### **🔒 Security Policies**
-![Security Policies](./screenshots/security-policies.png)
-*Security policy management and enforcement across APIs*
 
 ## Core Features
 
@@ -135,14 +99,12 @@ NEXT_PUBLIC_APP_URL=http://localhost:9002
 - `npm run start` - Start production server
 - `npm run lint` - Run ESLint
 - `npm run typecheck` - Run TypeScript checks
-- `npm run screenshots` - Capture UI screenshots
 
 ## 📚 **Documentation**
 
 ### **📖 Live Documentation**
 - **GitHub Pages**: [https://radhi1991.github.io/aran](https://radhi1991.github.io/aran)
 - **Auto-deployed**: Updates automatically on push to main branch
-- **Screenshots**: Real UI screenshots captured automatically
 - **Search**: Full-text search across all documentation
 
 ### **🔧 Documentation Development**
@@ -155,12 +117,6 @@ npm run docs:build
 
 # Preview built documentation
 npm run docs:preview
-```
-
-### **📸 Screenshot Capture**
-```bash
-# Capture new screenshots for documentation
-npm run screenshots
 ```
 
 ## 🚀 **Production Deployment**
@@ -209,7 +165,7 @@ npm start
 - **Role-Based Access**: Granular permissions
 - **Audit Logging**: Comprehensive activity tracking
 - **Real-time Security**: Live threat detection
-- **API Rate Limiting**: Per-company usage limits
+- **API Rate Limiting**: Per-company API usage limits
 - **Secure File Storage**: Encrypted file handling
 - **MCP Security**: **Comprehensive AI/ML security** protecting against real-world MCP threats
 
@@ -220,19 +176,7 @@ npm start
 - **Admin Guide**: Multi-tenant administration guide
 - **Developer Guide**: Integration and customization
 - **Security Guide**: Best practices and compliance
-- **MCP Security Guide**: **Comprehensive AI/ML security documentation**
-
-### **Documentation Commands:**
-```bash
-# Start documentation development server
-npm run docs:dev
-
-# Build documentation
-npm run docs:build
-
-# Preview built documentation
-npm run docs:preview
-```
+- **MCP Security Guide**: Comprehensive AI/ML security documentation
 
 ## 🤝 **Contributing**
 
