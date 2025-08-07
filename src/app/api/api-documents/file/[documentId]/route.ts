@@ -5,8 +5,11 @@ import fs from 'fs/promises';
 import path from 'path';
 import { lookup } from 'mime-types';
 
-export async function GET(request: NextRequest, { params }: { params: { documentId: string } }) {
-  const { documentId } = params;
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ documentId: string }> }
+) {
+  const { documentId } = await params;
 
   if (!documentId) {
     return NextResponse.json({ error: 'Document ID is required.' }, { status: 400 });

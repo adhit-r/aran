@@ -1,37 +1,34 @@
-version: '3.8'
-
 services:
-  aran-api-sentinel:
+  pocketbase:
+    image: ghcr.io/baaahs/pocketbase:latest
+    container_name: aran-pocketbase
+    ports:
+      - "8090:8090"
+    volumes:
+      - ./pb_data:/pb_data:Z
+      - ./pocketbase/pb_migrations:/pb_migrations:Z
+    environment:
+      - POCKETBASE_ADMIN_EMAIL=${POCKETBASE_ADMIN_EMAIL:-admin@aran.com}
+      - POCKETBASE_ADMIN_PASSWORD=${POCKETBASE_ADMIN_PASSWORD:-admin123}
+    command: |
+      serve
+      --http=0.0.0.0:8090
+      --dir=/pb_data
+      --origins=http://localhost:9002,http://127.0.0.1:9002
+    restart: unless-stopped
+
+  frontend:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: aran-frontend
     ports:
-      - "3000:3000"
+      - "9002:3000"
     environment:
-      - NODE_ENV=production
-      - NEXT_TELEMETRY_DISABLED=1
-    volumes:
-      - ./data:/app/data
-      - ./uploads:/app/uploads
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-
-  # Optional: Add a reverse proxy for production
-  nginx:
-    image: nginx:alpine
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./ssl:/etc/nginx/ssl:ro
+      - NEXT_PUBLIC_POCKETBASE_URL=http://localhost:8090
     depends_on:
-      - aran-api-sentinel
+      - pocketbase
     restart: unless-stopped
-    profiles:
-      - production 
+
+volumes:
+  pb_data: 

@@ -2,8 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { ApiDocumentMetadata } from '@/types/api-document'; // Adjust path as needed
 import { getOpenDb } from '@/lib/sqlite-db';
 
-export async function GET(request: NextRequest, { params }: { params: { documentId: string } }) {
-  const { documentId } = params;
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ documentId: string }> }
+) {
+  const { documentId } = await params;
 
   if (!documentId) {
     return NextResponse.json({ error: 'Document ID is required.' }, { status: 400 });

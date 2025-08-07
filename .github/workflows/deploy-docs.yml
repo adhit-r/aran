@@ -5,6 +5,7 @@ on:
     branches: [ main, clean-repository ]
     paths:
       - 'content/docs/**'
+      - 'src/app/docs/**'
       - 'fumadocs.config.ts'
       - 'package.json'
       - '.github/workflows/deploy-docs.yml'
@@ -33,9 +34,6 @@ jobs:
 
       - name: Install dependencies
         run: bun install
-
-      - name: Build documentation
-        run: bun run docs:build
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
