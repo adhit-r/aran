@@ -4,7 +4,7 @@ const path = require('path');
 console.log('📚 Building Aran API Sentinel Documentation...');
 
 // Create build directory
-const buildDir = '.fumadocs';
+const buildDir = 'docs';
 if (!fs.existsSync(buildDir)) {
   fs.mkdirSync(buildDir, { recursive: true });
 }
@@ -315,3 +315,4 @@ fs.writeFileSync(path.join(buildDir, 'README.md'), readmeContent);
 console.log('✅ Documentation built successfully!');
 console.log(`📁 Build directory: ${buildDir}`);
 console.log('🌐 Documentation will be deployed to: https://radhi1991.github.io/aran');
+console.log('📦 Ready for GitHub Pages deployment');
