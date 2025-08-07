@@ -1,0 +1,11 @@
+[install]
+exact = true
+peer = true
+optional = true
+
+[test]
+coverage = true
+preload = ["./test/setup.ts"]
+
+[run]
+bun = true

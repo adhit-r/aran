@@ -1,130 +1,37 @@
+@import '../../styled-system/styles.css';
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@layer base {
-  :root {
-    --background: 220 60% 98%; /* Very Light Cool Gray */
-    --foreground: 220 25% 25%; /* Dark Slate Blue */
-
-    --card: 220 60% 96%; 
-    --card-foreground: 220 25% 25%;
-
-    --popover: 0 0% 100%; 
-    --popover-foreground: 220 25% 25%;
-
-    --primary: 210 90% 58%; /* Vibrant, modern Blue */
-    --primary-foreground: 0 0% 100%; /* White */
-
-    --secondary: 200 50% 93%; 
-    --secondary-foreground: 210 30% 40%; 
-
-    --muted: 220 30% 94%; 
-    --muted-foreground: 220 15% 55%; 
-
-    --accent: 290 70% 60%; /* Vibrant Purple/Magenta as an accent */
-    --accent-foreground: 0 0% 100%;
-
-    --destructive: 0 75% 58%; 
-    --destructive-foreground: 0 0% 100%;
-    
-    --border: 220 30% 90%; 
-    --glass-border: 0 0% 100% / 0.2; 
-    
-    --input: 220 40% 95%; 
-    --input-border: 220 30% 88%;
-    --ring: 210 90% 60%; 
-
-    --chart-1: 210 90% 58%; 
-    --chart-2: 170 70% 45%; 
-    --chart-3: 290 70% 60%; 
-    --chart-4: 35 90% 60%;  
-    --chart-5: 0 75% 58%;   
-
-    --radius: 0.75rem; 
-
-    /* Sidebar specific theme variables */
-    --sidebar-background: 220 60% 98% / 0.75; /* Light background with good transparency for blur */
-    --sidebar-background-opaque: 220 60% 98%; 
-    --sidebar-foreground: 210 60% 45%; /* Updated: Thematic readable blue */
-    --sidebar-primary: 210 90% 58%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 290 70% 60%; 
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 210 80% 80% / 0.3; /* Updated: Light blueish, slightly more visible border */
-    --sidebar-ring: 210 90% 60%;
-  }
-
-  .dark {
-    --background: 220 15% 10%; 
-    --foreground: 220 15% 88%; 
-
-    --card: 220 15% 15%; 
-    --card-foreground: 220 15% 88%;
-
-    --popover: 220 15% 12%;
-    --popover-foreground: 220 15% 88%;
-
-    --primary: 210 80% 65%; 
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 220 15% 25%;
-    --secondary-foreground: 220 15% 80%;
-
-    --muted: 220 15% 20%;
-    --muted-foreground: 220 15% 65%;
-
-    --accent: 290 65% 65%;
-    --accent-foreground: 0 0% 100%;
-
-    --destructive: 0 70% 60%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 220 15% 25%;
-    --glass-border: 0 0% 100% / 0.1; 
-
-    --input: 220 15% 20%;
-    --input-border: 220 15% 30%;
-    --ring: 210 80% 65%;
-
-    --chart-1: 210 80% 65%;
-    --chart-2: 170 65% 50%;
-    --chart-3: 290 65% 65%;
-    --chart-4: 35 80% 65%;
-    --chart-5: 0 70% 60%;
-
-    --sidebar-background: 220 15% 12% / 0.7; /* Darker background with transparency for sidebar */
-    --sidebar-background-opaque: 220 15% 12%;
-    --sidebar-foreground: 210 60% 75%; /* Lighter, slightly desaturated blue for dark mode text */
-    --sidebar-primary: 210 80% 65%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 290 65% 65%;
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 210 30% 40% / 0.3; /* Updated: Muted blueish border for dark theme glass */
-    --sidebar-ring: 210 80% 65%;
-  }
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-.frosted-glass {
-  background-color: rgba(255, 255, 255, 0.1); 
-  backdrop-filter: blur(10px); 
-  -webkit-backdrop-filter: blur(10px); 
-  border: 1px solid rgba(255, 255, 255, 0.15); 
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
 }
 
-.dark .frosted-glass {
-  background-color: rgba(30, 30, 40, 0.2); 
-  border: 1px solid rgba(255, 255, 255, 0.1);
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
 }
 
     

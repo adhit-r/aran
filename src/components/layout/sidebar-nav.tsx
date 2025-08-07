@@ -1,162 +1,235 @@
-"use client";
+'use client'
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import React, { useState } from "react"; // Import useState
-import {
-  LayoutDashboard,
-  BookText,
-  ShieldCheck,
-  UsersRound,
-  SearchCode,
-  Siren,
-  Cpu,
-  FolderLock,
-  Network,
-  ChevronDown,
-  FileText, // Added FileText
-  type LucideIcon,
-} from "lucide-react";
+import { css } from '../../../styled-system/css'
+import { flex, stack } from '../../../styled-system/patterns'
+import { 
+  Shield, 
+  Activity, 
+  Database, 
+  Users, 
+  Settings, 
+  Search,
+  FileText,
+  Zap,
+  Globe,
+  Lock
+} from 'lucide-react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
-import { cn } from "@/lib/utils";
-import {
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-} from "@/components/ui/sidebar";
-
-interface NavItem {
-  href?: string;
-  label: string;
-  icon: LucideIcon;
-  soon?: boolean;
-  children?: NavItem[];
-}
-
-const navItems: NavItem[] = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  // Added Doc Inventory here
-  { href: "/api-documentation", label: "Doc Inventory", icon: FileText },
+const navItems = [
   {
-    label: "API Security",
-    icon: FolderLock,
-    children: [
-      { href: "/api-catalog", label: "API Catalog", icon: BookText },
-      { href: "/api-discovery", label: "API Discovery", icon: SearchCode },
-      { href: "/threat-detection", label: "API Threats", icon: Siren },
-    ],
+    title: 'Dashboard',
+    href: '/dashboard',
+    icon: Shield,
+    color: 'primary'
   },
   {
-    label: "MCP Security",
-    icon: Network,
-    children: [
-      { href: "/mcp-catalog", label: "MCP Catalog", icon: Cpu },
-      { href: "/mcp-discovery", label: "MCP Discovery", icon: SearchCode },
-      { href: "/mcp-threats", label: "MCP Threats", icon: Siren },
-    ],
+    title: 'API Discovery',
+    href: '/api-discovery',
+    icon: Search,
+    color: 'primary'
   },
-  { href: "/security-policies", label: "Security Policies", icon: ShieldCheck },
-  { href: "/access-control", label: "Access Control", icon: UsersRound },
-];
+  {
+    title: 'Threat Detection',
+    href: '/threat-detection',
+    icon: Activity,
+    color: 'warning'
+  },
+  {
+    title: 'API Catalog',
+    href: '/api-catalog',
+    icon: Database,
+    color: 'primary'
+  },
+  {
+    title: 'API Documentation',
+    href: '/api-documentation',
+    icon: FileText,
+    color: 'primary'
+  },
+  {
+    title: 'MCP Security',
+    href: '/mcp-security',
+    icon: Zap,
+    color: 'primary'
+  },
+  {
+    title: 'MCP Discovery',
+    href: '/mcp-discovery',
+    icon: Globe,
+    color: 'primary'
+  },
+  {
+    title: 'MCP Threats',
+    href: '/mcp-threats',
+    icon: Lock,
+    color: 'error'
+  },
+  {
+    title: 'MCP Catalog',
+    href: '/mcp-catalog',
+    icon: Database,
+    color: 'primary'
+  },
+  {
+    title: 'Security Policies',
+    href: '/security-policies',
+    icon: Shield,
+    color: 'primary'
+  },
+  {
+    title: 'Access Control',
+    href: '/access-control',
+    icon: Users,
+    color: 'primary'
+  }
+]
 
 export function SidebarNav() {
-  const pathname = usePathname();
-  const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
-
-  const toggleSection = (label: string) => {
-    setOpenSections((prev) => ({ ...prev, [label]: !prev[label] }));
-  };
-
-  const renderNavItem = (item: NavItem, isChild: boolean = false, parentLabel?: string) => {
-    const Icon = item.icon;
-    // isOpen for a parent item is its own state. For a child, it relies on its parent's state.
-    // The accordion toggle is on the parent, so item.label is the key for openSections.
-    const isOpen = item.children ? openSections[item.label] : (parentLabel ? openSections[parentLabel] : false);
-
-
-    const isActiveDirect = !item.children && item.href && (pathname === item.href || (pathname.startsWith(item.href) && item.href !== "/"));
-    const isActiveParent = item.children && item.children.some(child => child.href && (pathname === child.href || pathname.startsWith(child.href)));
-    // const isActive = isActiveDirect || isActiveParent; // This variable was defined but not directly used below, logic is in itemSpecificClassName
-
-
-    const baseClasses = "w-full flex items-center gap-3 px-3 rounded-lg text-sm transition-all duration-200 ease-in-out text-sidebar-foreground group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:gap-0";
-    const activeChildClasses = "bg-accent text-accent-foreground font-semibold hover:bg-accent/90 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
-    const inactiveChildClasses = "hover:bg-accent/10 hover:text-accent focus-visible:bg-accent/10 focus-visible:text-accent";
-
-    const parentItemClasses = "font-medium text-sidebar-foreground/90 hover:bg-muted/50";
-    const activeParentClass = "text-accent-foreground";
-
-    let itemSpecificClassName;
-
-    if (item.children) {
-      itemSpecificClassName = cn(
-        baseClasses,
-        "py-2",
-        parentItemClasses,
-        isActiveParent && activeParentClass,
-        item.soon && "cursor-not-allowed opacity-60"
-      );
-    } else {
-      itemSpecificClassName = cn(
-        baseClasses,
-        "py-2.5",
-        isActiveDirect ? activeChildClasses : inactiveChildClasses,
-        isChild && "pl-7 group-data-[collapsible=icon]:pl-0 text-xs",
-        item.soon && "cursor-not-allowed opacity-60 hover:bg-transparent hover:text-sidebar-foreground"
-      );
-    }
-
-    if (item.children) {
-      return (
-        <SidebarMenuItem key={item.label} className="flex flex-col items-start">
-          <button
-            onClick={() => toggleSection(item.label)} // Toggle based on the parent item's label
-            className={cn(itemSpecificClassName, "w-full")}
-            aria-expanded={openSections[item.label] || false} // Ensure aria-expanded reflects the specific section's state
-          >
-            <Icon className="h-5 w-5 shrink-0 group-data-[collapsible=icon]:h-6 group-data-[collapsible=icon]:w-6" />
-            <span className="group-data-[collapsible=icon]:hidden flex-grow text-left">{item.label}</span>
-            <ChevronDown
-              className={cn(
-                "h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 group-data-[collapsible=icon]:hidden",
-                openSections[item.label] && "rotate-180" // Chevron rotation based on specific section's state
-              )}
-            />
-          </button>
-          <div
-            className={cn(
-              "w-full flex flex-col items-start overflow-hidden transition-all duration-300 ease-in-out group-data-[collapsible=icon]:hidden",
-              openSections[item.label] ? "max-h-[1000px] opacity-100 mt-1" : "max-h-0 opacity-0" // Child visibility based on specific section's state
-            )}
-          >
-            {item.children.map((child) => renderNavItem(child, true, item.label))}
-          </div>
-        </SidebarMenuItem>
-      );
-    }
-
-    return (
-      <SidebarMenuItem key={item.label}>
-        <Link href={item.href || "#"} passHref className={cn(item.soon && "pointer-events-none")}>
-          <SidebarMenuButton
-            isActive={!!isActiveDirect}
-            tooltip={item.label}
-            className={itemSpecificClassName}
-          >
-            <Icon className="h-5 w-5 shrink-0 group-data-[collapsible=icon]:h-6 group-data-[collapsible=icon]:w-6" />
-            <span className="group-data-[collapsible=icon]:hidden">{item.label}</span>
-            {item.soon && (
-              <span className="ml-auto text-xs text-muted-foreground group-data-[collapsible=icon]:hidden">Soon</span>
-            )}
-          </SidebarMenuButton>
-        </Link>
-      </SidebarMenuItem>
-    );
-  };
+  const pathname = usePathname()
 
   return (
-    <SidebarMenu>
-      {navItems.map((item) => renderNavItem(item))}
-    </SidebarMenu>
-  );
+    <nav className={css({
+      w: '64',
+      h: '100vh',
+      bg: 'white',
+      borderRight: '1px solid',
+      borderColor: 'gray.200',
+      py: '6',
+      px: '4',
+      position: 'fixed',
+      left: '0',
+      top: '0',
+      zIndex: '20'
+    })}>
+      {/* Logo */}
+      <div className={css({ px: '4', mb: '8' })}>
+        <div className={flex({ align: 'center', gap: '3' })}>
+          <div className={css({
+            w: '8',
+            h: '8',
+            bg: 'primary.500',
+            borderRadius: 'lg',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'white',
+            fontWeight: 'bold',
+            fontSize: 'sm'
+          })}>
+            A
+          </div>
+          <span className={css({ fontSize: 'lg', fontWeight: 'bold', color: 'gray.900' })}>
+            Aran
+          </span>
+        </div>
+      </div>
+
+      {/* Navigation Items */}
+      <div className={stack({ gap: '1' })}>
+        {navItems.map((item) => {
+          const isActive = pathname === item.href
+          const Icon = item.icon
+          
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={css({
+                display: 'flex',
+                alignItems: 'center',
+                gap: '3',
+                px: '4',
+                py: '3',
+                borderRadius: 'lg',
+                fontSize: 'sm',
+                fontWeight: 'medium',
+                transition: 'all 0.2s',
+                _hover: {
+                  bg: isActive ? `${item.color}.100` : 'gray.50'
+                },
+                ...(isActive && {
+                  bg: `${item.color}.50`,
+                  color: `${item.color}.700`,
+                  border: '1px solid',
+                  borderColor: `${item.color}.200`
+                }),
+                ...(!isActive && {
+                  color: 'gray.700'
+                })
+              })}
+            >
+              <Icon 
+                size={18} 
+                className={css({
+                  color: isActive ? `${item.color}.600` : 'gray.500'
+                })}
+              />
+              {item.title}
+            </Link>
+          )
+        })}
+      </div>
+
+      {/* Bottom Section */}
+      <div className={css({ 
+        position: 'absolute', 
+        bottom: '6', 
+        left: '4', 
+        right: '4' 
+      })}>
+        <div className={css({
+          p: '4',
+          borderRadius: 'lg',
+          bg: 'gray.50',
+          border: '1px solid',
+          borderColor: 'gray.200'
+        })}>
+          <div className={flex({ align: 'center', gap: '3', mb: '2' })}>
+            <div className={css({
+              w: '8',
+              h: '8',
+              borderRadius: 'full',
+              bg: 'success.500',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'white',
+              fontSize: 'xs',
+              fontWeight: 'bold'
+            })}>
+              A
+            </div>
+            <div>
+              <p className={css({ fontSize: 'sm', fontWeight: 'medium', color: 'gray.900' })}>
+                Admin User
+              </p>
+              <p className={css({ fontSize: 'xs', color: 'gray.600' })}>
+                admin@company.com
+              </p>
+            </div>
+          </div>
+          
+          <Link
+            href="/settings"
+            className={css({
+              display: 'flex',
+              alignItems: 'center',
+              gap: '2',
+              px: '3',
+              py: '2',
+              borderRadius: 'md',
+              fontSize: 'xs',
+              color: 'gray.600',
+              _hover: { bg: 'gray.100' }
+            })}
+          >
+            <Settings size={14} />
+            Settings
+          </Link>
+        </div>
+      </div>
+    </nav>
+  )
 }
