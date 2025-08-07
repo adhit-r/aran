@@ -1,7 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import { detectMcpThreats } from "@/lib/mcp-utils";
+import { aiRouter, type AIAnalysisResult } from "@/lib/ai-router";
 
 const detectMcpThreatsSchema = z.object({
   mcpEndpoint: z.string().min(1, "MCP endpoint is required"),
@@ -15,17 +15,7 @@ export type DetectMcpThreatsActionState = {
   message: string;
   error?: string;
   inputErrors?: Array<{ path: string[]; message: string }>;
-  threatAnalysis?: {
-    threatLevel: "low" | "medium" | "high";
-    anomalyScore: number;
-    detectedThreats: string[];
-    recommendations: string[];
-    riskFactors: Array<{
-      factor: string;
-      severity: "low" | "medium" | "high";
-      description: string;
-    }>;
-  };
+  analysisResult?: AIAnalysisResult;
 };
 
 export async function detectMcpThreatsAction(
@@ -52,17 +42,26 @@ export async function detectMcpThreatsAction(
     }
 
     const { mcpEndpoint, requestData, responseData, userRole, trafficVolume } = validatedFields.data;
-    const threatAnalysis = await detectMcpThreats({
-      mcpEndpoint,
-      requestData: requestData || "",
-      responseData: responseData || "",
-      userRole: userRole || "",
-      trafficVolume: trafficVolume || "",
+    
+    // Use AI router for hybrid MCP analysis
+    const result = await aiRouter.analyzeThreat({
+      type: 'mcp-threat',
+      data: {
+        mcpEndpoint,
+        requestData: requestData || "",
+        responseData: responseData || "",
+        userRole: userRole || "",
+        trafficVolume: trafficVolume || "",
+      },
+      context: {
+        timestamp: new Date().toISOString(),
+        environment: process.env.NODE_ENV || 'development'
+      }
     });
 
     return {
-      message: `Threat analysis completed. Threat level: ${threatAnalysis.threatLevel.toUpperCase()}`,
-      threatAnalysis,
+      message: `MCP threat analysis completed using ${result.provider}. Confidence: ${(result.confidence * 100).toFixed(1)}%`,
+      analysisResult: result,
     };
   } catch (error) {
     return {

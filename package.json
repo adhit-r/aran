@@ -19,6 +19,7 @@
     "test": "bun test",
     "test:watch": "bun test --watch",
     "test:coverage": "bun test --coverage",
+    "test:ai-router": "bun run --bun scripts/test-ai-router.ts",
     "db:seed": "bun run --bun scripts/seed-database.ts",
     "db:migrate": "bun run --bun scripts/migrate-database.ts",
     "api:generate": "bun run --bun scripts/generate-api-client.ts",

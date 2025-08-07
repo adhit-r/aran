@@ -2,124 +2,51 @@
 
 import { css } from '../../../styled-system/css'
 import { flex, stack } from '../../../styled-system/patterns'
-import { 
-  Shield, 
-  Activity, 
-  Database, 
-  Users, 
-  Settings, 
-  Search,
-  FileText,
-  Zap,
-  Globe,
-  Lock
+import {
+  Shield, Activity, Database, Users, Settings, Search,
+  FileText, Zap, Globe, Lock, Brain
 } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 const navItems = [
-  {
-    title: 'Dashboard',
-    href: '/dashboard',
-    icon: Shield,
-    color: 'primary'
-  },
-  {
-    title: 'API Discovery',
-    href: '/api-discovery',
-    icon: Search,
-    color: 'primary'
-  },
-  {
-    title: 'Threat Detection',
-    href: '/threat-detection',
-    icon: Activity,
-    color: 'warning'
-  },
-  {
-    title: 'API Catalog',
-    href: '/api-catalog',
-    icon: Database,
-    color: 'primary'
-  },
-  {
-    title: 'API Documentation',
-    href: '/api-documentation',
-    icon: FileText,
-    color: 'primary'
-  },
-  {
-    title: 'MCP Security',
-    href: '/mcp-security',
-    icon: Zap,
-    color: 'primary'
-  },
-  {
-    title: 'MCP Discovery',
-    href: '/mcp-discovery',
-    icon: Globe,
-    color: 'primary'
-  },
-  {
-    title: 'MCP Threats',
-    href: '/mcp-threats',
-    icon: Lock,
-    color: 'error'
-  },
-  {
-    title: 'MCP Catalog',
-    href: '/mcp-catalog',
-    icon: Database,
-    color: 'primary'
-  },
-  {
-    title: 'Security Policies',
-    href: '/security-policies',
-    icon: Shield,
-    color: 'primary'
-  },
-  {
-    title: 'Access Control',
-    href: '/access-control',
-    icon: Users,
-    color: 'primary'
-  }
+  { title: 'Dashboard', href: '/dashboard', icon: Shield, color: 'primary' },
+  { title: 'API Discovery', href: '/api-discovery', icon: Search, color: 'blue' },
+  { title: 'API Catalog', href: '/api-catalog', icon: Database, color: 'green' },
+  { title: 'API Documentation', href: '/api-documentation', icon: FileText, color: 'purple' },
+  { title: 'Threat Detection', href: '/threat-detection', icon: Activity, color: 'red' },
+  { title: 'MCP Security', href: '/mcp-security', icon: Lock, color: 'orange' },
+  { title: 'MCP Discovery', href: '/mcp-discovery', icon: Globe, color: 'teal' },
+  { title: 'MCP Threats', href: '/mcp-threats', icon: Zap, color: 'yellow' },
+  { title: 'AI Providers', href: '/ai-providers', icon: Brain, color: 'indigo' },
+  { title: 'Security Policies', href: '/security-policies', icon: Settings, color: 'gray' },
+  { title: 'Access Control', href: '/access-control', icon: Users, color: 'pink' }
 ]
 
 export function SidebarNav() {
   const pathname = usePathname()
-
+  
   return (
     <nav className={css({
-      w: '64',
-      h: '100vh',
-      bg: 'white',
-      borderRight: '1px solid',
-      borderColor: 'gray.200',
-      py: '6',
-      px: '4',
       position: 'fixed',
       left: '0',
       top: '0',
-      zIndex: '20'
+      bottom: '0',
+      width: '64',
+      bg: 'white',
+      borderRight: '1px solid',
+      borderColor: 'gray.200',
+      zIndex: '50',
+      overflowY: 'auto'
     })}>
       {/* Logo */}
-      <div className={css({ px: '4', mb: '8' })}>
-        <div className={flex({ align: 'center', gap: '3' })}>
-          <div className={css({
-            w: '8',
-            h: '8',
-            bg: 'primary.500',
-            borderRadius: 'lg',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'white',
-            fontWeight: 'bold',
-            fontSize: 'sm'
-          })}>
-            A
-          </div>
+      <div className={css({
+        p: '6',
+        borderBottom: '1px solid',
+        borderColor: 'gray.200'
+      })}>
+        <div className={flex({ alignItems: 'center', gap: '2' })}>
+          <Shield className={css({ size: '6', color: 'primary.600' })} />
           <span className={css({ fontSize: 'lg', fontWeight: 'bold', color: 'gray.900' })}>
             Aran
           </span>
@@ -127,7 +54,7 @@ export function SidebarNav() {
       </div>
 
       {/* Navigation Items */}
-      <div className={stack({ gap: '1' })}>
+      <div className={stack({ gap: '1', p: '4' })}>
         {navItems.map((item) => {
           const isActive = pathname === item.href
           const Icon = item.icon
@@ -140,31 +67,23 @@ export function SidebarNav() {
                 display: 'flex',
                 alignItems: 'center',
                 gap: '3',
-                px: '4',
-                py: '3',
-                borderRadius: 'lg',
+                px: '3',
+                py: '2',
                 fontSize: 'sm',
                 fontWeight: 'medium',
+                rounded: 'md',
                 transition: 'all 0.2s',
+                color: isActive ? `${item.color}.700` : 'gray.600',
+                bg: isActive ? `${item.color}.50` : 'transparent',
                 _hover: {
-                  bg: isActive ? `${item.color}.100` : 'gray.50'
-                },
-                ...(isActive && {
-                  bg: `${item.color}.50`,
-                  color: `${item.color}.700`,
-                  border: '1px solid',
-                  borderColor: `${item.color}.200`
-                }),
-                ...(!isActive && {
-                  color: 'gray.700'
-                })
+                  bg: isActive ? `${item.color}.100` : 'gray.50',
+                  color: isActive ? `${item.color}.800` : 'gray.700'
+                }
               })}
             >
               <Icon 
                 size={18} 
-                className={css({
-                  color: isActive ? `${item.color}.600` : 'gray.500'
-                })}
+                className={css({ color: isActive ? `${item.color}.600` : 'gray.500' })} 
               />
               {item.title}
             </Link>
@@ -173,61 +92,65 @@ export function SidebarNav() {
       </div>
 
       {/* Bottom Section */}
-      <div className={css({ 
-        position: 'absolute', 
-        bottom: '6', 
-        left: '4', 
-        right: '4' 
+      <div className={css({
+        position: 'absolute',
+        bottom: '0',
+        left: '0',
+        right: '0',
+        p: '4',
+        borderTop: '1px solid',
+        borderColor: 'gray.200',
+        bg: 'white'
       })}>
-        <div className={css({
-          p: '4',
-          borderRadius: 'lg',
-          bg: 'gray.50',
-          border: '1px solid',
-          borderColor: 'gray.200'
-        })}>
-          <div className={flex({ align: 'center', gap: '3', mb: '2' })}>
-            <div className={css({
-              w: '8',
-              h: '8',
-              borderRadius: 'full',
-              bg: 'success.500',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'white',
-              fontSize: 'xs',
-              fontWeight: 'bold'
-            })}>
-              A
+        <div className={flex({ alignItems: 'center', gap: '3', mb: '3' })}>
+          <div className={css({
+            width: '8',
+            height: '8',
+            rounded: 'full',
+            bg: 'primary.100',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          })}>
+            <Users className={css({ size: '4', color: 'primary.600' })} />
+          </div>
+          <div className={css({ flex: '1', minW: '0' })}>
+            <div className={css({ fontSize: 'sm', fontWeight: 'medium', color: 'gray.900' })}>
+              Admin User
             </div>
-            <div>
-              <p className={css({ fontSize: 'sm', fontWeight: 'medium', color: 'gray.900' })}>
-                Admin User
-              </p>
-              <p className={css({ fontSize: 'xs', color: 'gray.600' })}>
-                admin@company.com
-              </p>
+            <div className={css({ fontSize: 'xs', color: 'gray.500' })}>
+              admin@company.com
             </div>
           </div>
-          
-          <Link
-            href="/settings"
-            className={css({
-              display: 'flex',
-              alignItems: 'center',
-              gap: '2',
-              px: '3',
-              py: '2',
-              borderRadius: 'md',
-              fontSize: 'xs',
-              color: 'gray.600',
-              _hover: { bg: 'gray.100' }
-            })}
-          >
-            <Settings size={14} />
-            Settings
-          </Link>
+        </div>
+        
+        <div className={flex({ gap: '1' })}>
+          <button className={css({
+            flex: '1',
+            px: '2',
+            py: '1',
+            fontSize: 'xs',
+            fontWeight: 'medium',
+            rounded: 'sm',
+            bg: 'gray.100',
+            color: 'gray.700',
+            _hover: { bg: 'gray.200' }
+          })}>
+            Profile
+          </button>
+          <button className={css({
+            flex: '1',
+            px: '2',
+            py: '1',
+            fontSize: 'xs',
+            fontWeight: 'medium',
+            rounded: 'sm',
+            bg: 'gray.100',
+            color: 'gray.700',
+            _hover: { bg: 'gray.200' }
+          })}>
+            Logout
+          </button>
         </div>
       </div>
     </nav>
