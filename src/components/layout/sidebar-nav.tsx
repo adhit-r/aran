@@ -15,6 +15,7 @@ import {
   Users,
   Brain
 } from 'lucide-react'
+import { CompanyHeader } from './company-header'
 
 const navItems = [
   { title: 'Dashboard', href: '/dashboard', icon: Shield, color: 'primary' },
@@ -35,16 +36,21 @@ export function SidebarNav() {
 
   return (
     <div className="fixed left-0 top-0 bottom-0 w-64 bg-white border-r border-gray-200 overflow-y-auto">
-      {/* Logo */}
+      {/* Logo and Company */}
       <div className="p-6 border-b border-gray-200">
         <div className="flex items-center space-x-3">
           <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
             <Shield className="w-5 h-5 text-white" />
           </div>
-          <div>
+          <div className="flex-1">
             <h1 className="text-lg font-bold text-gray-900">Aran</h1>
             <p className="text-xs text-gray-500">API Sentinel</p>
           </div>
+        </div>
+        
+        {/* Company Context */}
+        <div className="mt-4 pt-4 border-t border-gray-100">
+          <CompanyHeader />
         </div>
       </div>
 

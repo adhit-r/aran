@@ -7,7 +7,7 @@ interface AuthContextType {
   user: User | null;
   company: Company | null;
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string, companyId?: string) => Promise<void>;
   logout: () => void;
   loading: boolean;
 }
@@ -67,10 +67,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   }, []);
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string, companyId?: string) => {
     try {
+      // If companyId is provided, verify user belongs to that company
+      if (companyId) {
+        const userRecord = await pb.collection('users').getFirstListItem(`email = "${email}" && company = "${companyId}"`);
+        if (!userRecord) {
+          throw new Error('User not found in this organization');
+        }
+      }
+
       const authData = await pb.collection('users').authWithPassword(email, password);
       if (authData.record) {
+        // Verify user belongs to the selected company
+        if (companyId && authData.record.company !== companyId) {
+          throw new Error('User does not belong to this organization');
+        }
+
         setUser(authData.record as unknown as User);
         
         // Fetch company data

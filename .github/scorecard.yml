@@ -1,0 +1,92 @@
+# Scorecard configuration
+# This file configures the OSSF Scorecard checks and thresholds
+
+# Repository information
+repo: github.com/your-org/aran-api-sentinel
+branch: main
+
+# Check configurations
+checks:
+  # Binary-Artifacts: Check for binary artifacts in the repository
+  Binary-Artifacts:
+    score: 10
+    threshold: 0
+
+  # Branch-Protection: Check if the default branch is protected
+  Branch-Protection:
+    score: 10
+    threshold: 0
+
+  # Code-Review: Check if code review is required for pull requests
+  Code-Review:
+    score: 10
+    threshold: 0
+
+  # Contributors: Check if the project has contributors
+  Contributors:
+    score: 10
+    threshold: 0
+
+  # Dangerous-Workflow: Check for dangerous workflow patterns
+  Dangerous-Workflow:
+    score: 10
+    threshold: 0
+
+  # Dependency-Update-Tool: Check if dependency update tools are used
+  Dependency-Update-Tool:
+    score: 10
+    threshold: 0
+
+  # Fuzzing: Check if fuzzing is used
+  Fuzzing:
+    score: 10
+    threshold: 0
+
+  # License: Check if the project has a license
+  License:
+    score: 10
+    threshold: 0
+
+  # Maintained: Check if the project is maintained
+  Maintained:
+    score: 10
+    threshold: 0
+
+  # Pinned-Dependencies: Check if dependencies are pinned
+  Pinned-Dependencies:
+    score: 10
+    threshold: 0
+
+  # SAST: Check if SAST tools are used
+  SAST:
+    score: 10
+    threshold: 0
+
+  # Security-Policy: Check if security policy is present
+  Security-Policy:
+    score: 10
+    threshold: 0
+
+  # Signed-Releases: Check if releases are signed
+  Signed-Releases:
+    score: 10
+    threshold: 0
+
+  # Token-Permissions: Check if tokens have minimal permissions
+  Token-Permissions:
+    score: 10
+    threshold: 0
+
+  # Vulnerabilities: Check for known vulnerabilities
+  Vulnerabilities:
+    score: 10
+    threshold: 0
+
+  # Webhooks: Check if webhooks are used
+  Webhooks:
+    score: 10
+    threshold: 0
+
+# Output format
+format: sarif
+output-file: results.sarif

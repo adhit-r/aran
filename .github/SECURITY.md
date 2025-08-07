@@ -11,7 +11,7 @@
 
 **Please do not report security vulnerabilities through public GitHub issues.**
 
-Instead, please report them via email to [security@aran-api-sentinel.com](mailto:security@aran-api-sentinel.com).
+Instead, please report them via email to www.github.com/radhi1991
 
 You should receive a response within 48 hours. If for some reason you do not, please follow up via email to ensure we received your original message.
 
@@ -102,5 +102,3 @@ We track and report on security metrics:
 - **Security Score**: OSSF Scorecard rating
 - **Dependency Health**: Regular dependency vulnerability scans
 - **Code Quality**: Static analysis and security linting results
-
-For more information about our security practices, please see our [Security Documentation](https://docs.aran-api-sentinel.com/security).
