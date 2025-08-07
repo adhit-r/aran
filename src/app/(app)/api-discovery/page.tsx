@@ -1,8 +1,6 @@
 
 'use client'
 
-import { css } from '../../../../styled-system/css'
-import { flex, grid, stack, container } from '../../../../styled-system/patterns'
 import { Search, Plus, Filter, Download, Eye, Shield, AlertTriangle, CheckCircle } from 'lucide-react'
 import { useState } from 'react'
 
@@ -84,80 +82,56 @@ export default function ApiDiscoveryPage() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'active': return 'success'
-      case 'inactive': return 'gray'
-      case 'deprecated': return 'warning'
-      default: return 'gray'
+      case 'active': return 'bg-green-100 text-green-800'
+      case 'inactive': return 'bg-gray-100 text-gray-800'
+      case 'deprecated': return 'bg-yellow-100 text-yellow-800'
+      default: return 'bg-gray-100 text-gray-800'
     }
   }
 
   const getSecurityColor = (security: string) => {
     switch (security) {
-      case 'secure': return 'success'
-      case 'insecure': return 'error'
-      case 'unknown': return 'warning'
-      default: return 'gray'
+      case 'secure': return 'bg-green-100 text-green-800'
+      case 'insecure': return 'bg-red-100 text-red-800'
+      case 'unknown': return 'bg-yellow-100 text-yellow-800'
+      default: return 'bg-gray-100 text-gray-800'
     }
   }
 
   const getMethodColor = (method: string) => {
     switch (method) {
-      case 'GET': return 'success'
-      case 'POST': return 'primary'
-      case 'PUT': return 'warning'
-      case 'DELETE': return 'error'
-      default: return 'gray'
+      case 'GET': return 'bg-blue-100 text-blue-800'
+      case 'POST': return 'bg-green-100 text-green-800'
+      case 'PUT': return 'bg-yellow-100 text-yellow-800'
+      case 'DELETE': return 'bg-red-100 text-red-800'
+      default: return 'bg-gray-100 text-gray-800'
     }
   }
 
   return (
-    <div className={css({ minH: '100vh', bg: 'gray.50' })}>
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className={css({
-        bg: 'white',
-        borderBottom: '1px solid',
-        borderColor: 'gray.200',
-        px: '6',
-        py: '4'
-      })}>
-        <div className={flex({ align: 'center', justify: 'between' })}>
+      <header className="bg-white border-b border-gray-200 px-6 py-4">
+        <div className="flex items-center justify-between">
           <div>
-            <h1 className={css({ fontSize: '2xl', fontWeight: 'bold', color: 'gray.900', mb: '1' })}>
+            <h1 className="text-2xl font-bold text-gray-900 mb-1">
               API Discovery
             </h1>
-            <p className={css({ color: 'gray.600' })}>
+            <p className="text-gray-600">
               Automatically discover and monitor API endpoints
             </p>
           </div>
           
-          <div className={flex({ align: 'center', gap: '3' })}>
-            <button className={css({
-              px: '4',
-              py: '2',
-              borderRadius: 'lg',
-              bg: 'gray.100',
-              color: 'gray.700',
-              fontSize: 'sm',
-              fontWeight: 'medium',
-              _hover: { bg: 'gray.200' }
-            })}>
-              <div className={flex({ align: 'center', gap: '2' })}>
+          <div className="flex items-center gap-3">
+            <button className="px-4 py-2 rounded-lg bg-gray-100 text-gray-700 text-sm font-medium hover:bg-gray-200 transition-colors">
+              <div className="flex items-center gap-2">
                 <Download size={16} />
                 Export
               </div>
             </button>
             
-            <button className={css({
-              px: '4',
-              py: '2',
-              borderRadius: 'lg',
-              bg: 'primary.500',
-              color: 'white',
-              fontSize: 'sm',
-              fontWeight: 'medium',
-              _hover: { bg: 'primary.600' }
-            })}>
-              <div className={flex({ align: 'center', gap: '2' })}>
+            <button className="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition-colors">
+              <div className="flex items-center gap-2">
                 <Plus size={16} />
                 New Scan
               </div>
@@ -167,351 +141,175 @@ export default function ApiDiscoveryPage() {
       </header>
 
       {/* Main Content */}
-      <div className={container({ maxW: '7xl', mx: 'auto', px: '6', py: '8' })}>
+      <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Stats Cards */}
-        <div className={grid({ columns: { base: 1, md: 4 }, gap: '6', mb: '8' })}>
-          <div className={css({
-            bg: 'white',
-            p: '6',
-            borderRadius: 'xl',
-            border: '1px solid',
-            borderColor: 'gray.200',
-            boxShadow: 'soft'
-          })}>
-            <div className={flex({ align: 'center', gap: '3', mb: '4' })}>
-              <div className={css({
-                w: '10',
-                h: '10',
-                borderRadius: 'lg',
-                bg: 'primary.50',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'primary.600'
-              })}>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
                 <Search size={20} />
               </div>
               <div>
-                <p className={css({ fontSize: 'sm', color: 'gray.600' })}>Total Endpoints</p>
-                <p className={css({ fontSize: '2xl', fontWeight: 'bold', color: 'gray.900' })}>
+                <p className="text-sm text-gray-600">Total Endpoints</p>
+                <p className="text-2xl font-bold text-gray-900">
                   {mockEndpoints.length}
                 </p>
               </div>
             </div>
           </div>
 
-          <div className={css({
-            bg: 'white',
-            p: '6',
-            borderRadius: 'xl',
-            border: '1px solid',
-            borderColor: 'gray.200',
-            boxShadow: 'soft'
-          })}>
-            <div className={flex({ align: 'center', gap: '3', mb: '4' })}>
-              <div className={css({
-                w: '10',
-                h: '10',
-                borderRadius: 'lg',
-                bg: 'success.50',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'success.600'
-              })}>
-                <CheckCircle size={20} />
+          <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center text-green-600">
+                <Shield size={20} />
               </div>
               <div>
-                <p className={css({ fontSize: 'sm', color: 'gray.600' })}>Secure</p>
-                <p className={css({ fontSize: '2xl', fontWeight: 'bold', color: 'gray.900' })}>
+                <p className="text-sm text-gray-600">Secure APIs</p>
+                <p className="text-2xl font-bold text-gray-900">
                   {mockEndpoints.filter(e => e.security === 'secure').length}
                 </p>
               </div>
             </div>
           </div>
 
-          <div className={css({
-            bg: 'white',
-            p: '6',
-            borderRadius: 'xl',
-            border: '1px solid',
-            borderColor: 'gray.200',
-            boxShadow: 'soft'
-          })}>
-            <div className={flex({ align: 'center', gap: '3', mb: '4' })}>
-              <div className={css({
-                w: '10',
-                h: '10',
-                borderRadius: 'lg',
-                bg: 'error.50',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'error.600'
-              })}>
+          <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-lg bg-red-50 flex items-center justify-center text-red-600">
                 <AlertTriangle size={20} />
               </div>
               <div>
-                <p className={css({ fontSize: 'sm', color: 'gray.600' })}>Insecure</p>
-                <p className={css({ fontSize: '2xl', fontWeight: 'bold', color: 'gray.900' })}>
+                <p className="text-sm text-gray-600">Insecure APIs</p>
+                <p className="text-2xl font-bold text-gray-900">
                   {mockEndpoints.filter(e => e.security === 'insecure').length}
                 </p>
               </div>
             </div>
           </div>
 
-          <div className={css({
-            bg: 'white',
-            p: '6',
-            borderRadius: 'xl',
-            border: '1px solid',
-            borderColor: 'gray.200',
-            boxShadow: 'soft'
-          })}>
-            <div className={flex({ align: 'center', gap: '3', mb: '4' })}>
-              <div className={css({
-                w: '10',
-                h: '10',
-                borderRadius: 'lg',
-                bg: 'warning.50',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'warning.600'
-              })}>
-                <Shield size={20} />
+          <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-lg bg-purple-50 flex items-center justify-center text-purple-600">
+                <Eye size={20} />
               </div>
               <div>
-                <p className={css({ fontSize: 'sm', color: 'gray.600' })}>Unknown</p>
-                <p className={css({ fontSize: '2xl', fontWeight: 'bold', color: 'gray.900' })}>
-                  {mockEndpoints.filter(e => e.security === 'unknown').length}
+                <p className="text-sm text-gray-600">Active Monitoring</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {mockEndpoints.filter(e => e.status === 'active').length}
                 </p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Filters and Search */}
-        <div className={css({
-          bg: 'white',
-          p: '6',
-          borderRadius: 'xl',
-          border: '1px solid',
-          borderColor: 'gray.200',
-          boxShadow: 'soft',
-          mb: '6'
-        })}>
-          <div className={grid({ columns: { base: 1, md: 3 }, gap: '4' })}>
-            <div className={css({ position: 'relative' })}>
-              <Search className={css({ 
-                position: 'absolute', 
-                left: '3', 
-                top: '50%', 
-                transform: 'translateY(-50%)',
-                color: 'gray.400',
-                size: '20'
-              })} />
-              <input
-                type="text"
-                placeholder="Search endpoints..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className={css({
-                  w: 'full',
-                  pl: '10',
-                  pr: '4',
-                  py: '2',
-                  borderRadius: 'lg',
-                  border: '1px solid',
-                  borderColor: 'gray.300',
-                  fontSize: 'sm',
-                  _focus: {
-                    outline: 'none',
-                    borderColor: 'primary.500',
-                    ring: '1px',
-                    ringColor: 'primary.200'
-                  }
-                })}
-              />
+        {/* Search and Filters */}
+        <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm mb-6">
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex-1">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                <input
+                  type="text"
+                  placeholder="Search API endpoints..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
             </div>
-
-            <select
-              value={selectedStatus}
-              onChange={(e) => setSelectedStatus(e.target.value)}
-              className={css({
-                w: 'full',
-                px: '4',
-                py: '2',
-                borderRadius: 'lg',
-                border: '1px solid',
-                borderColor: 'gray.300',
-                fontSize: 'sm',
-                bg: 'white',
-                _focus: {
-                  outline: 'none',
-                  borderColor: 'primary.500',
-                  ring: '1px',
-                  ringColor: 'primary.200'
-                }
-              })}
-            >
-              <option value="all">All Status</option>
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
-              <option value="deprecated">Deprecated</option>
-            </select>
-
-            <select
-              value={selectedSecurity}
-              onChange={(e) => setSelectedSecurity(e.target.value)}
-              className={css({
-                w: 'full',
-                px: '4',
-                py: '2',
-                borderRadius: 'lg',
-                border: '1px solid',
-                borderColor: 'gray.300',
-                fontSize: 'sm',
-                bg: 'white',
-                _focus: {
-                  outline: 'none',
-                  borderColor: 'primary.500',
-                  ring: '1px',
-                  ringColor: 'primary.200'
-                }
-              })}
-            >
-              <option value="all">All Security</option>
-              <option value="secure">Secure</option>
-              <option value="insecure">Insecure</option>
-              <option value="unknown">Unknown</option>
-            </select>
+            
+            <div className="flex gap-2">
+              <select
+                value={selectedStatus}
+                onChange={(e) => setSelectedStatus(e.target.value)}
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="all">All Status</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+                <option value="deprecated">Deprecated</option>
+              </select>
+              
+              <select
+                value={selectedSecurity}
+                onChange={(e) => setSelectedSecurity(e.target.value)}
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="all">All Security</option>
+                <option value="secure">Secure</option>
+                <option value="insecure">Insecure</option>
+                <option value="unknown">Unknown</option>
+              </select>
+            </div>
           </div>
         </div>
 
-        {/* Endpoints Table */}
-        <div className={css({
-          bg: 'white',
-          borderRadius: 'xl',
-          border: '1px solid',
-          borderColor: 'gray.200',
-          boxShadow: 'soft',
-          overflow: 'hidden'
-        })}>
-          <div className={css({
-            px: '6',
-            py: '4',
-            borderBottom: '1px solid',
-            borderColor: 'gray.200',
-            bg: 'gray.50'
-          })}>
-            <h2 className={css({ fontSize: 'lg', fontWeight: 'bold', color: 'gray.900' })}>
-              Discovered Endpoints ({filteredEndpoints.length})
-            </h2>
+        {/* API Endpoints Table */}
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-200">
+            <h2 className="text-lg font-semibold text-gray-900">Discovered Endpoints</h2>
           </div>
-
-          <div className={css({ overflowX: 'auto' })}>
-            <table className={css({ w: 'full' })}>
-              <thead className={css({ bg: 'gray.50' })}>
+          
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-50">
                 <tr>
-                  <th className={css({ px: '6', py: '3', textAlign: 'left', fontSize: 'sm', fontWeight: 'medium', color: 'gray.700' })}>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Endpoint
                   </th>
-                  <th className={css({ px: '6', py: '3', textAlign: 'left', fontSize: 'sm', fontWeight: 'medium', color: 'gray.700' })}>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Method
                   </th>
-                  <th className={css({ px: '6', py: '3', textAlign: 'left', fontSize: 'sm', fontWeight: 'medium', color: 'gray.700' })}>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Status
                   </th>
-                  <th className={css({ px: '6', py: '3', textAlign: 'left', fontSize: 'sm', fontWeight: 'medium', color: 'gray.700' })}>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Security
                   </th>
-                  <th className={css({ px: '6', py: '3', textAlign: 'left', fontSize: 'sm', fontWeight: 'medium', color: 'gray.700' })}>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Traffic
                   </th>
-                  <th className={css({ px: '6', py: '3', textAlign: 'left', fontSize: 'sm', fontWeight: 'medium', color: 'gray.700' })}>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Last Seen
                   </th>
-                  <th className={css({ px: '6', py: '3', textAlign: 'left', fontSize: 'sm', fontWeight: 'medium', color: 'gray.700' })}>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody className={css({ divideY: '1px solid', divideColor: 'gray.200' })}>
+              <tbody className="bg-white divide-y divide-gray-200">
                 {filteredEndpoints.map((endpoint) => (
-                  <tr key={endpoint.id} className={css({ _hover: { bg: 'gray.50' } })}>
-                    <td className={css({ px: '6', py: '4' })}>
-                      <div>
-                        <p className={css({ fontSize: 'sm', fontWeight: 'medium', color: 'gray.900' })}>
-                          {endpoint.path}
-                        </p>
-                        <p className={css({ fontSize: 'xs', color: 'gray.500' })}>
-                          {endpoint.company}
-                        </p>
-                      </div>
+                  <tr key={endpoint.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm font-medium text-gray-900">{endpoint.path}</div>
+                      <div className="text-sm text-gray-500">{endpoint.company}</div>
                     </td>
-                    <td className={css({ px: '6', py: '4' })}>
-                      <span className={css({
-                        px: '2',
-                        py: '1',
-                        borderRadius: 'md',
-                        fontSize: 'xs',
-                        fontWeight: 'medium',
-                        bg: `${getMethodColor(endpoint.method)}.50`,
-                        color: `${getMethodColor(endpoint.method)}.700`
-                      })}>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getMethodColor(endpoint.method)}`}>
                         {endpoint.method}
                       </span>
                     </td>
-                    <td className={css({ px: '6', py: '4' })}>
-                      <span className={css({
-                        px: '2',
-                        py: '1',
-                        borderRadius: 'md',
-                        fontSize: 'xs',
-                        fontWeight: 'medium',
-                        bg: `${getStatusColor(endpoint.status)}.50`,
-                        color: `${getStatusColor(endpoint.status)}.700`
-                      })}>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(endpoint.status)}`}>
                         {endpoint.status}
                       </span>
                     </td>
-                    <td className={css({ px: '6', py: '4' })}>
-                      <div className={flex({ align: 'center', gap: '2' })}>
-                        {endpoint.security === 'secure' && <CheckCircle size={16} className={css({ color: 'success.500' })} />}
-                        {endpoint.security === 'insecure' && <AlertTriangle size={16} className={css({ color: 'error.500' })} />}
-                        {endpoint.security === 'unknown' && <Shield size={16} className={css({ color: 'warning.500' })} />}
-                        <span className={css({
-                          px: '2',
-                          py: '1',
-                          borderRadius: 'md',
-                          fontSize: 'xs',
-                          fontWeight: 'medium',
-                          bg: `${getSecurityColor(endpoint.security)}.50`,
-                          color: `${getSecurityColor(endpoint.security)}.700`
-                        })}>
-                          {endpoint.security}
-                        </span>
-                      </div>
-                    </td>
-                    <td className={css({ px: '6', py: '4' })}>
-                      <span className={css({ fontSize: 'sm', color: 'gray.900' })}>
-                        {endpoint.traffic.toLocaleString()}
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getSecurityColor(endpoint.security)}`}>
+                        {endpoint.security}
                       </span>
                     </td>
-                    <td className={css({ px: '6', py: '4' })}>
-                      <span className={css({ fontSize: 'sm', color: 'gray.600' })}>
-                        {endpoint.lastSeen}
-                      </span>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {endpoint.traffic.toLocaleString()}
                     </td>
-                    <td className={css({ px: '6', py: '4' })}>
-                      <button className={css({
-                        p: '2',
-                        borderRadius: 'md',
-                        color: 'gray.600',
-                        _hover: { bg: 'gray.100' }
-                      })}>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {endpoint.lastSeen}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <button className="text-blue-600 hover:text-blue-900 mr-3">
                         <Eye size={16} />
+                      </button>
+                      <button className="text-green-600 hover:text-green-900">
+                        <CheckCircle size={16} />
                       </button>
                     </td>
                   </tr>
