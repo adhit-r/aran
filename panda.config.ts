@@ -20,7 +20,7 @@ export default defineConfig({
           700: { value: '#a16207' },
           800: { value: '#854d0e' },
           900: { value: '#713f12' },
-          950: { value: '#422006' },
+          950: { value: '#422006' }
         },
         gray: {
           50: { value: '#f8fafc' },
@@ -33,7 +33,7 @@ export default defineConfig({
           700: { value: '#334155' },
           800: { value: '#1e293b' },
           900: { value: '#0f172a' },
-          950: { value: '#020617' },
+          950: { value: '#020617' }
         },
         success: {
           50: { value: '#f0fdf4' },
@@ -46,7 +46,7 @@ export default defineConfig({
           700: { value: '#15803d' },
           800: { value: '#166534' },
           900: { value: '#14532d' },
-          950: { value: '#052e16' },
+          950: { value: '#052e16' }
         },
         warning: {
           50: { value: '#fffbeb' },
@@ -59,7 +59,7 @@ export default defineConfig({
           700: { value: '#b45309' },
           800: { value: '#92400e' },
           900: { value: '#78350f' },
-          950: { value: '#451a03' },
+          950: { value: '#451a03' }
         },
         error: {
           50: { value: '#fef2f2' },
@@ -72,32 +72,37 @@ export default defineConfig({
           700: { value: '#b91c1c' },
           800: { value: '#991b1b' },
           900: { value: '#7f1d1d' },
-          950: { value: '#450a0a' },
-        },
+          950: { value: '#450a0a' }
+        }
       },
       spacing: {
         '18': { value: '4.5rem' },
-        '88': { value: '22rem' },
-        '128': { value: '32rem' },
+        '88': { value: '22rem' }
       },
       fontSizes: {
         '2xs': { value: '0.625rem' },
+        xs: { value: '0.75rem' },
+        sm: { value: '0.875rem' },
+        md: { value: '1rem' },
+        lg: { value: '1.125rem' },
+        xl: { value: '1.25rem' },
+        '2xl': { value: '1.5rem' },
         '3xl': { value: '1.875rem' },
         '4xl': { value: '2.25rem' },
         '5xl': { value: '3rem' },
         '6xl': { value: '3.75rem' },
         '7xl': { value: '4.5rem' },
         '8xl': { value: '6rem' },
-        '9xl': { value: '8rem' },
-      },
-    },
+        '9xl': { value: '8rem' }
+      }
+    }
   },
   utilities: {
     extend: {
       text: {
         className: 'text',
-        values: 'fontSizes',
-      },
-    },
-  },
+        values: 'fontSizes'
+      }
+    }
+  }
 })

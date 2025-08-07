@@ -1,6 +1,5 @@
 
 import { SidebarNav } from "@/components/layout/sidebar-nav"
-import { css } from '../../../styled-system/css'
 
 export default function AppLayout({
   children,
@@ -8,13 +7,9 @@ export default function AppLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className={css({ display: 'flex', minH: '100vh' })}>
+    <div className="flex h-screen bg-gray-50">
       <SidebarNav />
-      <main className={css({ 
-        flex: '1', 
-        ml: '64',
-        bg: 'gray.50'
-      })}>
+      <main className="flex-1 overflow-auto ml-64">
         {children}
       </main>
     </div>
