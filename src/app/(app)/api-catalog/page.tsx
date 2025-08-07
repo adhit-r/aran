@@ -231,10 +231,10 @@ export default function ApiCatalogPage() {
     setNewApiDocsUrl("");
   };
 
-  const handleApiSelectFromTree = (apiId: string) => {
+  const handleApiSelectFromTree = (node: any) => {
+    const apiId = node.id || node.apiId;
     setSelectedApiIdInTree(apiId);
     setIsApiDetailModalOpen(true);
-    // In a real app, you might fetch more details or display them in a dedicated panel/modal
     console.log("Selected API from Tree:", apiId);
   };
 
@@ -441,7 +441,7 @@ export default function ApiCatalogPage() {
                     <TableCell>{api.category}</TableCell>
                     <TableCell>{api.owner}</TableCell>
                     <TableCell>
-                      <Badge variant={getStatusBadgeVariant(api.status)} className="capitalize">{api.status}</Badge>
+                      <Badge variant={getStatusBadgeVariant(api.status || 'active')} className="capitalize">{api.status || 'active'}</Badge>
                     </TableCell>
                     <TableCell>
                       <Button variant="link" size="sm" asChild className="p-0 h-auto">
@@ -476,7 +476,7 @@ export default function ApiCatalogPage() {
                     treeData={apiTreeData}
                     onApiSelect={handleApiSelectFromTree}
                     defaultExpandedLevel={1}
-                    selectedApiId={selectedApiIdInTree}
+                    selectedApiNodeId={selectedApiIdInTree}
                 />
             </ScrollArea>
           </CardContent>

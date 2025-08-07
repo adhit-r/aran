@@ -44,10 +44,10 @@ const features: FeatureDetail[] = [
   },
   {
     id: 'api-discovery',
-    title: 'AI-Powered API Discovery',
+    title: 'API Discovery',
     icon: Search,
     description: [
-      'Leveraging advanced AI and machine learning techniques, Aran API Sentinel continuously monitors your network traffic (e.g., VPC flow logs, API gateway logs) and can analyze code repositories to discover new, undocumented, or deprecated APIs.',
+      'Leveraging pattern matching and rule-based analysis, Aran API Sentinel continuously monitors your network traffic (e.g., VPC flow logs, API gateway logs) and can analyze code repositories to discover new, undocumented, or deprecated APIs.',
       'This includes internal, external, and third-party APIs, ensuring that no API goes unnoticed. The discovery process is non-intrusive and provides rich insights into API usage patterns, data flows, and potential security blind spots.',
     ],
     benefits: [
@@ -58,10 +58,10 @@ const features: FeatureDetail[] = [
       'Reduce manual effort in API documentation and inventory management significantly.',
     ],
     howItWorks: {
-      title: "How AI Discovery Works (Simplified):",
+      title: "How API Discovery Works (Simplified):",
       steps: [
         "1. **Data Ingestion**: Securely ingests data from various sources (network traffic, API gateway logs, code repositories, existing documentation).",
-        "2. **AI Analysis**: Sophisticated AI models analyze communication patterns, code signatures, and textual data to identify potential API endpoints, data structures, and undocumented services.",
+        "2. **Pattern Analysis**: Rule-based analysis examines communication patterns, code signatures, and textual data to identify potential API endpoints, data structures, and undocumented services.",
         "3. **Schema Inference**: For discovered endpoints, Aran attempts to infer basic schema information and potential parameters.",
         "4. **Catalog Integration**: Discovered APIs are presented for review and then seamlessly integrated into the Centralized API Catalog with appropriate metadata suggestions."
       ]
@@ -70,24 +70,24 @@ const features: FeatureDetail[] = [
   },
   {
     id: 'api-threats',
-    title: 'AI-Driven Threat Detection',
+    title: 'Threat Detection',
     icon: AlertTriangle,
     description: [
-      'Our AI-driven threat detection engine analyzes API traffic in real-time to identify and alert on malicious activities, anomalous behavior, and potential security breaches targeting your APIs.',
-      'It employs machine learning models trained on diverse datasets to distinguish between legitimate and malicious traffic, minimizing false positives and detecting zero-day threats. It detects common API attacks (like OWASP API Top 10), business logic abuse, data exfiltration attempts, and more. Customizable alerting and deep integration with SIEM/SOAR systems ensure prompt and effective incident response.',
+      'Our rule-based threat detection engine analyzes API traffic in real-time to identify and alert on malicious activities, anomalous behavior, and potential security breaches targeting your APIs.',
+      'It employs heuristic analysis and pattern matching to distinguish between legitimate and malicious traffic, minimizing false positives and detecting zero-day threats. It detects common API attacks (like OWASP API Top 10), business logic abuse, data exfiltration attempts, and more. Customizable alerting and deep integration with SIEM/SOAR systems ensure prompt and effective incident response.',
     ],
     benefits: [
       'Proactively protect against a wide range of API attacks and sensitive data breaches.',
-      'Significantly reduce false positives (e.g., by up to 75%) compared to traditional WAFs, thanks to context-aware AI analysis.', // Example quantified benefit
+      'Significantly reduce false positives (e.g., by up to 75%) compared to traditional WAFs, thanks to context-aware analysis.', // Example quantified benefit
       'Accelerate incident response times with actionable alerts, rich contextual information, and remediation suggestions.',
-      'Continuously adapt to evolving threat landscapes with self-learning AI models.',
+      'Continuously adapt to evolving threat landscapes with rule-based analysis.',
       'Gain deep insights into attacker techniques and API abuse patterns.',
     ],
     howItWorks: {
-        title: "How AI Threat Detection Works (Simplified):",
+        title: "How Threat Detection Works (Simplified):",
         steps: [
             "1. **Real-time Monitoring**: Captures and analyzes API request and response data from integrated sources.",
-            "2. **Behavioral Baselining**: AI engine learns normal API usage patterns for each API and user context.",
+            "2. **Behavioral Baselining**: Rule-based engine learns normal API usage patterns for each API and user context.",
             "3. **Anomaly & Signature Detection**: Compares live traffic against learned baselines and known attack signatures (including OWASP API Top 10).",
             "4. **Threat Scoring & Alerting**: Anomalies and threats are scored based on severity and confidence. High-risk events trigger immediate alerts and can initiate automated responses or workflows."
         ]
@@ -99,7 +99,7 @@ const features: FeatureDetail[] = [
     title: 'MCP Catalog & Governance',
     icon: Network,
     description: [
-      'Aran API Sentinel allows you to define and catalog your Mission Critical Processes (MCPs) and meticulously map the APIs that support them. This provides a business-centric view of your API security and operational risk.',
+      'Aran API Sentinel allows you to define and catalog your Model Context Protocol (MCP) implementations and meticulously map the APIs that support them. This provides an AI/ML-centric view of your API security and operational risk.',
       'Furthermore, it enables robust API governance by allowing you to associate specific policies, compliance mandates (e.g., PCI-DSS, HIPAA), and SLOs directly with these critical processes and their underlying APIs.',
     ],
     benefits: [

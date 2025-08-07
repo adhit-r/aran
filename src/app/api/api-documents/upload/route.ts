@@ -127,6 +127,8 @@ export async function POST(request: NextRequest) {
 
     const metadataToSave: ApiDocumentMetadata = {
       id: documentId,
+      name: file.name, // Use fileName as name
+      endpoint: `/api/documents/${documentId}`, // Generate endpoint
       fileName: file.name,
       title: parsedInfo.title || file.name,
       version: parsedInfo.version,

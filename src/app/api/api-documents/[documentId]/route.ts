@@ -30,22 +30,12 @@ export async function GET(request: NextRequest, { params }: { params: { document
     // Transform the row to ApiDocumentMetadata
     // downloadUrl is intentionally omitted from this endpoint's response.
     const metadata: ApiDocumentMetadata = {
-      id: row.id,
-      fileName: row.fileName,
-      title: row.title,
-      version: row.version,
-      format: row.format,
-      storagePath: row.storagePath, // Still part of the metadata record
-      uploadedBy: row.uploadedBy,
-      // Convert ISO string dates from DB back to Date objects for the type,
-      // NextResponse.json will handle serializing them back to ISO strings.
+      ...row,
+      name: row.fileName, // Use fileName as name
+      endpoint: `/api/documents/${documentId}`, // Generate endpoint
+      tags: row.tags ? JSON.parse(row.tags) : [],
       uploadedAt: new Date(row.uploadedAt),
       lastModifiedAt: row.lastModifiedAt ? new Date(row.lastModifiedAt) : undefined,
-      teamId: row.teamId,
-      projectId: row.projectId,
-      description: row.description,
-      tags: row.tags ? JSON.parse(row.tags) : [],
-      // downloadUrl is not set here
     };
 
     return NextResponse.json(metadata, { status: 200 });

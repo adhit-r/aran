@@ -56,7 +56,7 @@ export async function GET(request: NextRequest, { params }: { params: { document
     const fileBuffer = await fs.readFile(fullPathToSpecFile);
 
     // Create a Response object
-    const response = new Response(fileBuffer, {
+    const response = new Response(fileBuffer as unknown as BodyInit, {
       status: 200,
       headers: {
         'Content-Type': contentType,

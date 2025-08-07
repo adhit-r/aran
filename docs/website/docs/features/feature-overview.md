@@ -12,20 +12,39 @@ Aran API Sentinel offers a holistic suite of integrated features designed to pro
 The **API Catalog** serves as a centralized, searchable, and auto-updating repository of all your APIs. It provides a single source of truth, detailing API endpoints, specifications (e.g., OpenAPI/Swagger), versions, data classifications, and associated metadata.
 *Why it's important:* Understanding what APIs you have, where they are, what data they handle, and who owns them is the first step towards effective security and governance. It helps eliminate shadow APIs and reduces the complexity of managing your API landscape.
 
-## AI-Powered API Discovery
+## API Discovery
 
-**AI-Powered API Discovery** automatically identifies and categorizes all APIs across your environment, including internal, external, and third-party services. By analyzing network traffic, code repositories, and other sources, it uncovers even undocumented or "shadow" APIs.
+**API Discovery** automatically identifies and categorizes all APIs across your environment, including internal, external, and third-party services. By analyzing network traffic, code repositories, and other sources, it uncovers even undocumented or "shadow" APIs using pattern matching and rule-based analysis.
 *How it helps:* Provides complete visibility into your actual API footprint, ensuring that all APIs are known, monitored, and can be brought under governance. This is crucial for understanding your true attack surface.
 
-## AI-Powered Threat Detection (API Threats)
+## Threat Detection
 
-This feature **proactively identifies and alerts on potential security threats** targeting your APIs. Using machine learning, it analyzes API traffic for anomalous behavior, known attack patterns (like OWASP API Top 10), and business logic abuse.
+This feature **proactively identifies and alerts on potential security threats** targeting your APIs. Using rule-based analysis, it analyzes API traffic for anomalous behavior, known attack patterns (like OWASP API Top 10), and business logic abuse.
 *Its benefits:* Moves beyond signature-based detection to find novel and sophisticated attacks. It helps in early detection of breaches, reduces false positives, and enables faster incident response.
 
-## MCP Catalog (Mission Critical Process Catalog)
+## MCP Catalog (Model Context Protocol Catalog)
 
-The **MCP Catalog** allows you to define, manage, and gain visibility into your Mission Critical Processes and the APIs that underpin them. This links technical API assets to their business context and impact.
-*What it is:* Provides a clear understanding of which APIs support critical business functions, helping prioritize security efforts and assess business risk associated with API vulnerabilities.
+The **MCP Catalog** allows you to define, manage, and gain visibility into your Model Context Protocol implementations and the APIs that underpin them. This links technical API assets to their AI/ML context and security implications.
+
+**What is Model Context Protocol (MCP)?** MCP is a protocol that enables AI applications to connect to external data sources and tools. It allows AI models to access real-time information, perform actions, and interact with external systems. This creates new security considerations as AI applications can now access sensitive data and perform actions on your behalf.
+
+**Security Implications:** MCP implementations require careful security monitoring because:
+- AI applications can access sensitive data through MCP connections
+- MCP tools can perform actions on your systems
+- Authentication and authorization become critical for AI-tool interactions
+- Data privacy and compliance requirements extend to AI interactions
+
+*What it provides:* A clear understanding of which APIs support AI/ML functions, helping prioritize security efforts and assess risks associated with AI-powered API interactions.
+
+## MCP Discovery
+
+**MCP Discovery** automatically discovers and analyzes Model Context Protocol implementations within your environment. It uses pattern matching to identify MCP endpoints, data sources, and AI actions from traffic data.
+*How it helps:* Provides visibility into AI-tool interactions and helps secure AI applications that access your systems through MCP connections.
+
+## MCP Threats
+
+**MCP Threats** monitors and analyzes potential threats to Model Context Protocol implementations and their security posture. It detects unauthorized AI access, destructive operations, and suspicious AI-tool interactions.
+*Its benefits:* Protects against AI-related security threats and ensures proper access controls for AI applications.
 
 ## Security Policies
 
@@ -43,14 +62,14 @@ This overview provides a starting point for understanding Aran API Sentinel's ca
 
 The API Document Inventory functionality, which allows for uploading and managing API specification files (detailed further in its dedicated documentation page), currently utilizes a local SQLite database for storing metadata and the server's local filesystem for the spec files themselves. This ensures data locality and self-contained operation for this specific feature.
 
-## AI-Powered API Discovery Workflow
+## API Discovery Workflow
 
-The following diagram illustrates the high-level workflow for AI-Powered API Discovery:
+The following diagram illustrates the high-level workflow for API Discovery:
 
 ```mermaid
 graph TD
     A[Input: Network Traffic / API Logs / Code Repos] --> B[Data Ingestion & Preprocessing];
-    B --> C{AI Analysis Engine - Gemini};
+    B --> C{Pattern Matching Engine};
     C -- Identifies Potential API --> D[API Endpoint & Schema Detection/Inference];
     D --> E[Pattern Recognition & Categorization];
     E --> F{Validation & Confidence Scoring};
@@ -60,15 +79,15 @@ graph TD
     H --> I;
 ```
 
-## AI-Powered Threat Detection Workflow
+## Threat Detection Workflow
 
-The following diagram illustrates the high-level workflow for AI-Powered Threat Detection:
+The following diagram illustrates the high-level workflow for Threat Detection:
 
 ```mermaid
 graph TD
     A[Input: Real-time API Traffic] --> B[Data Collection & Normalization];
     B --> C[Preprocessing & Feature Extraction];
-    C --> D{AI-Powered Anomaly Detection Engine};
+    C --> D{Rule-based Anomaly Detection Engine};
     D -- Anomaly Detected --> E[Threat Analysis & Contextualization];
     E --> F{Threat Scoring & Severity Assessment};
     F -- High Severity Threat --> G[Alert Generation & Incident Response];

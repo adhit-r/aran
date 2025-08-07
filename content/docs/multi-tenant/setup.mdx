@@ -1,0 +1,211 @@
+---
+title: Multi-Tenant Setup Guide
+description: Complete guide to setting up multi-tenant architecture with PocketBase
+image: /screenshots/login.png
+tags: [multi-tenant, setup, pocketbase]
+---
+
+# Multi-Tenant Setup Guide
+
+Aran API Sentinel features a complete multi-tenant architecture powered by **PocketBase**. This guide will walk you through setting up and configuring multi-tenancy for your organization.
+
+## 🏗️ **Architecture Overview**
+
+### **Multi-Tenant Benefits**
+- **🏢 Company Isolation**: Each company has completely separate data
+- **👥 Role-Based Access**: Different permissions per user role
+- **🔐 Secure Authentication**: Built-in multi-tenant authentication
+- **📊 Real-time Updates**: Live data synchronization
+- **📝 Audit Logging**: Complete activity tracking per company
+
+### **Technical Stack**
+- **Frontend**: Next.js 15 with React 18
+- **Backend**: PocketBase (real-time database)
+- **Database**: SQLite with real-time updates
+- **Authentication**: Built-in multi-tenant auth
+- **File Storage**: Secure file handling per company
+
+## 🚀 **Quick Setup**
+
+### **1. Install Dependencies**
+```bash
+npm install
+```
+
+### **2. Start Development Servers**
+```bash
+npm run dev:full
+```
+
+This starts:
+- **PocketBase**: `http://127.0.0.1:8090` (Backend)
+- **Next.js**: `http://localhost:9002` (Frontend)
+
+### **3. Access Admin Panel**
+- **URL**: `http://127.0.0.1:8090/_/`
+- **Purpose**: Manage companies, users, and data
+- **Features**: Real-time data management interface
+
+## 📊 **PocketBase Admin Panel Setup**
+
+### **Step 1: Create Your First Company**
+1. Go to `http://127.0.0.1:8090/_/`
+2. Navigate to **Collections** → **companies**
+3. Click **"New record"**
+4. Fill in:
+   - **Name**: Your company name
+   - **Status**: `active`
+   - **Domain**: Your domain (optional)
+5. Click **"Create"**
+
+### **Step 2: Create Your First User**
+1. Navigate to **Collections** → **users**
+2. Click **"New record"**
+3. Fill in:
+   - **Email**: Your email
+   - **Password**: Your password
+   - **Name**: Your full name
+   - **Company**: Select your company (from step 1)
+   - **Role**: `admin`
+4. Click **"Create"**
+
+### **Step 3: Test Login**
+1. Go to `http://localhost:9002/login`
+2. Enter your email and password
+3. You should be redirected to the dashboard
+
+## 🏗️ **Database Schema**
+
+### **Collections Overview**
+- **`companies`**: Company/tenant information and settings
+- **`users`**: Multi-tenant user accounts with role-based access
+- **`api_documents`**: API specification files per company
+- **`api_catalog`**: API catalog entries per company
+- **`mcp_implementations`**: MCP implementations per company
+- **`security_policies`**: Security policies per company
+- **`audit_logs`**: Activity logs per company
+
+### **Security Rules**
+All collections include tenant isolation rules:
+```javascript
+// Example: Users can only access their company's data
+listRule: "@request.auth.id != '' && @request.auth.record.company = company"
+```
+
+## 🔐 **Authentication & Authorization**
+
+### **Multi-Tenant Login**
+![Login Interface](/screenshots/login.png)
+*Secure multi-tenant authentication with company-specific access*
+
+### **Role-Based Access Control**
+- **Admin**: Full access to company data and settings
+- **Manager**: Manage APIs, policies, and users
+- **Analyst**: View and analyze data
+- **Viewer**: Read-only access to assigned resources
+
+### **Tenant Isolation**
+- **Data Separation**: Complete isolation between companies
+- **User Context**: Users can only access their company's data
+- **Audit Logging**: All activities tracked per company
+- **Real-time Updates**: Live data synchronization per tenant
+
+## 📈 **Use Cases**
+
+### **✅ For SaaS Providers**
+- **Scalable Architecture**: Easy to add new companies
+- **Data Isolation**: Complete separation between tenants
+- **Custom Branding**: Company-specific logos and settings
+- **Usage Analytics**: Per-company usage tracking
+
+### **✅ For Enterprise**
+- **Department Isolation**: Separate workspaces per department
+- **Role-Based Security**: Granular permissions per user
+- **Audit Compliance**: Complete activity logging
+- **Custom Policies**: Company-specific security rules
+
+### **✅ For Developers**
+- **Real-time Updates**: Live data synchronization
+- **Admin Panel**: Easy data management interface
+- **API-First**: RESTful API for all operations
+- **Type Safety**: Full TypeScript support
+
+## 🔧 **Configuration**
+
+### **Environment Variables**
+Create `.env.local`:
+```bash
+NEXT_PUBLIC_POCKETBASE_URL=http://127.0.0.1:8090
+NEXT_PUBLIC_APP_URL=http://localhost:9002
+```
+
+### **Development Scripts**
+```bash
+# Start both servers
+npm run dev:full
+
+# Start PocketBase only
+npm run pocketbase
+
+# Start Next.js only
+npm run dev
+
+# Build for production
+npm run build
+
+# Type checking
+npm run typecheck
+
+# Linting
+npm run lint
+```
+
+## 🚀 **Production Deployment**
+
+### **Docker Deployment**
+```bash
+# Build and run with Docker Compose
+docker-compose up -d
+```
+
+### **Manual Deployment**
+```bash
+# Build the application
+npm run build
+
+# Start PocketBase (production)
+./pb_data/pocketbase serve --http="0.0.0.0:8090" --dir="./pb_data"
+
+# Start Next.js (production)
+npm start
+```
+
+## 🔐 **Security Features**
+
+- **Tenant Isolation**: Complete data separation
+- **Role-Based Access**: Granular permissions
+- **Audit Logging**: Comprehensive activity tracking
+- **Real-time Security**: Live threat detection
+- **API Rate Limiting**: Per-company usage limits
+- **Secure File Storage**: Encrypted file handling
+
+## 📚 **Next Steps**
+
+After setting up multi-tenancy, explore these features:
+
+- **[API Discovery](/features/api-discovery)**: Discover and catalog APIs
+- **[Threat Detection](/features/threat-detection)**: Set up security monitoring
+- **[API Catalog](/features/api-catalog)**: Organize and manage APIs
+- **[Security Policies](/security-guide/policies)**: Configure security rules
+
+## 🤝 **Support**
+
+Need help with multi-tenant setup? Check out:
+
+- **[API Reference](/api-reference)**: Technical documentation
+- **[Security Guide](/security-guide)**: Best practices
+- **[Troubleshooting](/troubleshooting)**: Common issues and solutions
+
+---
+
+**Aran API Sentinel** - Your complete multi-tenant API security and governance platform! 🚀 

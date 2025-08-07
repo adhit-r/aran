@@ -16,10 +16,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  capture-screenshots:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -30,23 +27,73 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: docs/website/package-lock.json # Assuming package-lock.json exists or will exist
 
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@v5
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Install Docusaurus dependencies
-        working-directory: ./docs/website
-        run: npm ci # Use clean install for CI
+      - name: Install Puppeteer dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ca-certificates fonts-liberation libappindicator3-1 libasound2 libatk-bridge2.0-0 libdrm2 libgtk-3-0 libnspr4 libnss3 libxcomposite1 libxdamage1 libxrandr2 xdg-utils
 
-      - name: Build Docusaurus site
-        working-directory: ./docs/website
-        run: npm run build
+      - name: Start application and capture screenshots
+        run: |
+          # Start the application in background
+          npm run dev:full &
+          APP_PID=$!
+          
+          # Wait for application to start
+          echo "Waiting for application to start..."
+          sleep 30
+          
+          # Capture screenshots
+          echo "Capturing screenshots..."
+          npm run screenshots
+          
+          # Stop the application
+          kill $APP_PID
+          
+          # Wait for cleanup
+          sleep 10
+
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots
+          path: screenshots/
+
+  deploy:
+    needs: capture-screenshots
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download screenshots
+        uses: actions/download-artifact@v4
+        with:
+          name: screenshots
+          path: screenshots/
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build documentation
+        run: npm run docs:build
 
       - name: Upload build artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./docs/website/build
+          path: .fumadocs
 
       - name: Deploy to GitHub Pages
         id: deployment

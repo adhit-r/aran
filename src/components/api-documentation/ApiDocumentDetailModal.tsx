@@ -78,7 +78,7 @@ export function ApiDocumentDetailModal({ document, isOpen, onClose }: ApiDocumen
   const handleDownload = () => {
     if (document?.downloadUrl) {
         // Create a temporary link to trigger the download with the original filename
-        const link = document.createElement('a');
+        const link = window.document.createElement('a');
         link.href = document.downloadUrl;
         // Potentially add target="_blank" and rel="noopener noreferrer" if direct download is problematic
         // Forcing download with original filename often requires server-side Content-Disposition header
@@ -87,9 +87,9 @@ export function ApiDocumentDetailModal({ document, isOpen, onClose }: ApiDocumen
         link.setAttribute('download', document.fileName || 'api-document'); // Suggest filename
         link.target = '_blank'; // Open in new tab as a fallback behavior
         link.rel = 'noopener noreferrer';
-        document.body.appendChild(link);
+        window.document.body.appendChild(link);
         link.click();
-        document.body.removeChild(link);
+        window.document.body.removeChild(link);
     }
   };
 

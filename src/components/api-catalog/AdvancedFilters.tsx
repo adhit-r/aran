@@ -47,6 +47,10 @@ export const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({
     });
   };
 
+  const getOnCheckedChange = (filterType: keyof FilterConfig, value: string) => (checked: boolean) => {
+    handleFilterToggle(filterType, value, checked);
+  };
+
   const getActiveFilterCount = () => {
     return Object.values(filterConfig).reduce((count, values) => count + values.length, 0);
   };

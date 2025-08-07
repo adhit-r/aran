@@ -63,7 +63,7 @@ function ProductHomepage() {
             <div className={styles.featuresGrid}> {/* Ensure this grid can handle 2 or 3 items per row gracefully */}
               <FeatureCard
                 icon={<Search size={40} />} // Slightly smaller icons for cards
-                title="AI-Powered Discovery"
+                title="API Discovery"
                 description="Automatically discover all your APIs—internal, external, shadow, and zombie—providing a complete, real-time inventory."
                 linkTo="/product/features#api-discovery"
               />
@@ -75,8 +75,8 @@ function ProductHomepage() {
               />
               <FeatureCard
                 icon={<AlertTriangle size={40} />}
-                title="AI-Driven Threat Detection"
-                description="Leverage AI to identify and alert on anomalous behavior, known attack patterns, and potential threats to your APIs in real-time."
+                title="Threat Detection"
+                description="Leverage rule-based analysis to identify and alert on anomalous behavior, known attack patterns, and potential threats to your APIs in real-time."
                 linkTo="/product/features#api-threats"
               />
               <FeatureCard
@@ -94,7 +94,7 @@ function ProductHomepage() {
               <FeatureCard
                 icon={<Network size={40} />} // Using Network icon for MCP
                 title="MCP Catalog & Governance"
-                description="Catalog Mission Critical Processes (MCPs), map their API dependencies, and apply targeted governance and security monitoring."
+                description="Catalog Model Context Protocol (MCP) implementations, map their API dependencies, and apply targeted governance and security monitoring."
                 linkTo="/product/features#mcp-catalog" // Assuming an anchor for MCP Catalog
               />
             </div>
@@ -114,8 +114,8 @@ function ProductHomepage() {
               />
               <FeatureCard
                 icon={<BrainCircuit size={40} />}
-                title="AI-Powered Intelligence"
-                description="Leverage cutting-edge AI to automate complex tasks like API discovery, anomaly detection, and risk assessment, freeing up your security teams for strategic work."
+                title="Rule-Based Intelligence"
+                description="Leverage sophisticated pattern matching and rule-based analysis to automate complex tasks like API discovery, anomaly detection, and risk assessment, freeing up your security teams for strategic work."
                 linkTo="/product/features#api-discovery" // Example link
               />
               <FeatureCard

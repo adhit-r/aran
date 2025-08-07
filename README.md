@@ -1,108 +1,247 @@
-# Aran API Sentinel: Your AI-Powered API Security & Governance Platform
+# Aran API Sentinel: Your API Security & Governance Platform
 
-Aran API Sentinel is an intelligent platform designed to give organizations comprehensive visibility, security, and control over their entire API ecosystem. In today's interconnected digital landscape, APIs are critical assets, and Aran empowers you to manage them effectively.
+Built with Next.js for a responsive frontend and **PocketBase** for multi-tenant backend, Aran API Sentinel is your solution for modern API lifecycle management and security.
 
-**What Aran Does:**
-*   **Automated API Discovery**: Leverages AI to continuously discover all your APIs, including shadow and zombie APIs, providing a complete inventory.
+![Aran API Sentinel Dashboard](./screenshots/dashboard.png)
+
+## 🚀 **Multi-Tenant Architecture**
+
+Aran now features a complete multi-tenant architecture powered by **PocketBase**:
+
+### **🏢 Company/Tenant Isolation:**
+- **Multi-Company Support**: Each company has isolated data and users
+- **Role-Based Access**: Admin, Manager, Analyst, Viewer roles per company
+- **Secure Data Separation**: Complete tenant isolation with PocketBase rules
+- **Company Branding**: Custom logos and settings per company
+
+### **🔐 Authentication & Authorization:**
+- **PocketBase Auth**: Built-in authentication with multi-tenant support
+- **Real-time Updates**: Live data synchronization across all clients
+- **Session Management**: Secure session handling per tenant
+- **Audit Logging**: Comprehensive activity tracking per company
+
+## 🖼️ **UI Screenshots**
+
+### **📊 Dashboard Overview**
+![Dashboard](./screenshots/dashboard.png)
+*Comprehensive dashboard with API health metrics, security posture, and real-time monitoring*
+
+### **🔍 API Discovery**
+![API Discovery](./screenshots/api-discovery.png)
+*Automated API discovery using pattern matching and rule-based analysis*
+
+### **🛡️ Threat Detection**
+![Threat Detection](./screenshots/threat-detection.png)
+*Real-time threat detection with rule-based analysis and anomaly scoring*
+
+### **📚 API Catalog**
+![API Catalog](./screenshots/api-catalog.png)
+*Centralized API catalog with search, filtering, and governance features*
+
+### **🤖 MCP Security**
+![MCP Security](./screenshots/mcp-security.png)
+*Model Context Protocol security monitoring for AI/ML applications*
+
+### **🔐 Multi-Tenant Login**
+![Login](./screenshots/login.png)
+*Secure multi-tenant authentication with company-specific access*
+
+### **📄 API Documentation**
+![API Documentation](./screenshots/api-documentation.png)
+*API documentation management with file upload and specification viewing*
+
+### **🔒 Security Policies**
+![Security Policies](./screenshots/security-policies.png)
+*Security policy management and enforcement across APIs*
+
+## Core Features
+
+*   **Automated API Discovery**: Uses pattern matching and rule-based analysis to discover APIs from traffic data, providing a complete inventory.
 *   **Centralized API Catalog**: Offers a searchable, well-organized catalog of all discovered and registered APIs, complete with metadata and documentation links.
-*   **Robust API Security**: Implements security best practices by helping you define, enforce, and monitor security policies across your APIs.
-*   **AI-Driven Threat Detection**: Proactively identifies and alerts on anomalous API traffic patterns and potential security threats.
+*   **API Security**: Implements security best practices by helping you define, enforce, and monitor security policies across your APIs.
+*   **Threat Detection**: Proactively identifies and alerts on anomalous API traffic patterns and potential security threats using rule-based analysis.
+*   **MCP Security**: **Comprehensive Model Context Protocol security** for AI/ML applications, protecting against real-world threats like tool poisoning, line jumping, tool shadowing, prompt injection, broken authorization, and data exfiltration.
 *   **Streamlined API Governance**: Facilitates consistent governance, ensuring APIs adhere to organizational standards and compliance requirements.
 
-Built with Next.js for a responsive frontend, Firebase for backend services, and powered by Genkit for advanced AI capabilities, Aran API Sentinel is your solution for modern API lifecycle management and security.
+## 🛠️ **Quick Start**
 
-## 🚀 Running the Frontend
+### **Prerequisites:**
+- Node.js 18+ 
+- npm or yarn
 
-To run the frontend development server, follow these steps:
-
-1.  **Install dependencies**: This command installs all the necessary packages for the frontend application.
-    ```bash
-    npm install
-    ```
-2.  **Start the Next.js development server**: This command starts the development server, usually on `http://localhost:3000`.
-    ```bash
-    npm run dev
-    ```
-    The Next.js development server supports hot reloading, so changes you make to the code will be reflected in your browser automatically.
-
-## 🧠 Running the Backend (AI Flows)
-
-Genkit flows are used to define and run the backend AI logic.
-
-To run the Genkit AI flows for development:
-This command starts the Genkit development environment, allowing you to test and run your AI flows locally. You can usually access the Genkit developer UI at `http://localhost:4000` to inspect flows and their execution.
+### **1. Install Dependencies:**
 ```bash
-npm run genkit:dev
+npm install
 ```
 
-For running with auto-reloading when file changes are detected:
-This command provides a convenient way to develop, as Genkit will automatically restart when you modify your flow definitions.
+### **2. Start PocketBase Backend:**
 ```bash
-npm run genkit:watch
+npm run pocketbase
+```
+This starts PocketBase at `http://127.0.0.1:8090`
+
+### **3. Start Next.js Frontend:**
+```bash
+npm run dev
+```
+This starts Aran at `http://localhost:9002`
+
+### **4. Start Both Together:**
+```bash
+npm run dev:full
 ```
 
-## 🏗️ System Architecture
+## 📊 **PocketBase Admin Panel**
 
-Aran API Sentinel integrates several key technologies to deliver its comprehensive features:
+Access the PocketBase admin panel at `http://127.0.0.1:8090/_/` to:
 
-```mermaid
-graph TD
-    A[User/Administrator] --> B(Next.js Frontend - Aran UI);
-    B --> C{Firebase Backend (Auth, Firestore, Storage)};
-    C --> B;
-    B --> D[Genkit AI Flows (API Discovery, Threat Detection, etc.)];
-    D --> B; % For results/data to frontend
-    D --> C; % For storing/retrieving data from Firestore
-    D --> E[External AI Services (e.g., Google Gemini via Vertex AI)];
+- **Manage Companies**: Create and configure tenant companies
+- **User Management**: Add users and assign roles per company
+- **Data Management**: View and manage all collections
+- **Real-time Monitoring**: Monitor API usage and performance
+
+## 🏗️ **Multi-Tenant Database Schema**
+
+### **Collections:**
+- **`companies`**: Company/tenant information and settings
+- **`users`**: Multi-tenant user accounts with role-based access
+- **`api_documents`**: API specification files per company
+- **`api_catalog`**: API catalog entries per company
+- **`mcp_implementations`**: MCP implementations per company
+- **`security_policies`**: Security policies per company
+- **`audit_logs`**: Activity logs per company
+
+### **Security Rules:**
+All collections include tenant isolation rules:
+```javascript
+// Example: Users can only access their company's data
+listRule: "@request.auth.id != '' && @request.auth.record.company = company"
 ```
 
-*   **User/Administrator**: Interacts with Aran via the web interface to manage APIs, view dashboards, configure policies, and respond to security alerts.
-*   **Next.js Frontend (Aran UI)**: The primary, responsive user interface built with Next.js and React. It provides all user-facing functionalities like the API catalog, documentation inventory, policy management, threat dashboards, and administrative controls.
-*   **Firebase Backend**: Provides core backend-as-a-service capabilities for certain platform features:
-    *   **Authentication (Conceptual/Planned)**: Envisioned for managing user identities and access control for the overall platform.
-    *   **Firestore (Conceptual/Planned)**: Potentially used for storing application-wide data like user profiles, general API catalog metadata (if not moved to another DB), or security policies.
-    *   *(Note: The API Document Inventory feature, as currently implemented, uses a local SQLite database for metadata and local filesystem for file storage, separate from Firebase.)*
-*   **Local Data Storage (for API Document Inventory)**:
-    *   **SQLite Database**: A local SQLite database (`data/aran_docs.sqlite`) is used to store metadata for the API Document Inventory feature (e.g., titles, formats, paths to specification files).
-    *   **Local Filesystem**: Uploaded API specification files for the Document Inventory are stored on the server's local filesystem (in the `uploads/api_specs` directory).
-*   **Genkit AI Flows**: These are server-side TypeScript functions, orchestrated by the Genkit framework, that execute the platform's AI-driven logic. Key responsibilities include:
-    *   Automated discovery of APIs by analyzing network traffic or code repositories.
-    *   Intelligent threat detection by processing API request/response patterns and identifying anomalies.
-    *   AI-assisted governance, such as compliance checks or documentation generation assistance.
-*   **External AI Services**: To perform advanced analysis and generation tasks, Genkit AI flows interface with powerful external AI models (e.g., Google's Gemini models via Vertex AI, or other Large Language Models).
+## 🔧 **Development**
 
-## 📄 Documentation
+### **Environment Variables:**
+Create `.env.local`:
+```bash
+NEXT_PUBLIC_POCKETBASE_URL=http://127.0.0.1:8090
+NEXT_PUBLIC_APP_URL=http://localhost:9002
+```
 
-Comprehensive documentation for Aran API Sentinel is available on our Docusaurus-powered site, located in the `docs/website` directory. This site includes:
+### **Available Scripts:**
+- `npm run dev` - Start Next.js development server
+- `npm run pocketbase` - Start PocketBase backend
+- `npm run dev:full` - Start both servers together
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
+- `npm run typecheck` - Run TypeScript checks
+- `npm run screenshots` - Capture UI screenshots
 
-*   **Product Information**: An overview of Aran API Sentinel, its architecture, and core value propositions.
-*   **Feature Guides**: Detailed explanations of all major features. Explore guides on:
-    *   AI-Powered API Discovery
-    *   Configuring Threat Detection parameters
-    *   Setting up Security Policies
-    *   Managing Access Control (RBAC)
-    *   Understanding the MCP Catalog
-    *   And more...
-*   **Technical Documentation**: Setup information, workflow diagrams, and future API references.
+## 📚 **Documentation**
 
-**Accessing the Documentation:**
+### **📖 Live Documentation**
+- **GitHub Pages**: [https://radhi1991.github.io/aran](https://radhi1991.github.io/aran)
+- **Auto-deployed**: Updates automatically on push to main branch
+- **Screenshots**: Real UI screenshots captured automatically
+- **Search**: Full-text search across all documentation
 
-*   **Live Site (Once Deployed)**: The live documentation will be available at `https://radhi1991.github.io/aran/` (Please update this URL if your GitHub username or repository name changes, or if you use a custom domain).
-*   **Local Development**:
-    1.  Navigate to the `docs/website` directory in your terminal:
-        ```bash
-        cd docs/website
-        ```
-    2.  Install dependencies (if you haven't already):
-        ```bash
-        npm install
-        ```
-        (or `yarn install` if you prefer Yarn)
-    3.  Start the Docusaurus development server:
-        ```bash
-        npm run start
-        ```
-        (or `yarn start`)
-    4.  Open the site in your browser, typically at `http://localhost:3000`.
+### **🔧 Documentation Development**
+```bash
+# Start documentation development server
+npm run docs:dev
 
-We encourage you to explore the documentation site for a complete understanding of Aran API Sentinel.
+# Build documentation
+npm run docs:build
+
+# Preview built documentation
+npm run docs:preview
+```
+
+### **📸 Screenshot Capture**
+```bash
+# Capture new screenshots for documentation
+npm run screenshots
+```
+
+## 🚀 **Production Deployment**
+
+### **Docker Deployment:**
+```bash
+# Build and run with Docker Compose
+docker-compose up -d
+```
+
+### **Manual Deployment:**
+```bash
+# Build the application
+npm run build
+
+# Start PocketBase (production)
+./pb_data/pocketbase serve --http="0.0.0.0:8090" --dir="./pb_data"
+
+# Start Next.js (production)
+npm start
+```
+
+## 📈 **Multi-Tenant Benefits**
+
+### **✅ For SaaS Providers:**
+- **Scalable Architecture**: Easy to add new companies
+- **Data Isolation**: Complete separation between tenants
+- **Custom Branding**: Company-specific logos and settings
+- **Usage Analytics**: Per-company usage tracking
+
+### **✅ For Enterprise:**
+- **Department Isolation**: Separate workspaces per department
+- **Role-Based Security**: Granular permissions per user
+- **Audit Compliance**: Complete activity logging
+- **Custom Policies**: Company-specific security rules
+
+### **✅ For Developers:**
+- **Real-time Updates**: Live data synchronization
+- **Admin Panel**: Easy data management interface
+- **API-First**: RESTful API for all operations
+- **Type Safety**: Full TypeScript support
+
+## 🔐 **Security Features**
+
+- **Tenant Isolation**: Complete data separation
+- **Role-Based Access**: Granular permissions
+- **Audit Logging**: Comprehensive activity tracking
+- **Real-time Security**: Live threat detection
+- **API Rate Limiting**: Per-company usage limits
+- **Secure File Storage**: Encrypted file handling
+- **MCP Security**: **Comprehensive AI/ML security** protecting against real-world MCP threats
+
+## 📚 **Documentation Sections**
+
+- **Fumadocs MDX**: Modern, type-safe documentation system
+- **API Reference**: PocketBase REST API documentation
+- **Admin Guide**: Multi-tenant administration guide
+- **Developer Guide**: Integration and customization
+- **Security Guide**: Best practices and compliance
+- **MCP Security Guide**: **Comprehensive AI/ML security documentation**
+
+### **Documentation Commands:**
+```bash
+# Start documentation development server
+npm run docs:dev
+
+# Build documentation
+npm run docs:build
+
+# Preview built documentation
+npm run docs:preview
+```
+
+## 🤝 **Contributing**
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+
+## 📄 **License**
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) file for details.
+
+---
+
+**Aran API Sentinel** - Your complete multi-tenant API security and governance platform with **comprehensive MCP Security**! 🚀

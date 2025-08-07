@@ -50,12 +50,12 @@ export default function ApiDiscoveryPage() {
 
        <Alert variant="default" className="bg-blue-900/20 border-blue-700 text-blue-300 [&>svg]:text-blue-400">
         <Info className="h-4 w-4" />
-        <AlertTitle>Data Privacy Notice</AlertTitle>
+        <AlertTitle>Data Processing Notice</AlertTitle>
         <AlertDescription>
-          If your API traffic data (e.g., logs, HAR files) contains PII, CPNI, or other sensitive information within 
-          request/response payloads, ensure it is appropriately masked or redacted <strong className="font-semibold">before submission</strong>. 
-          This application sends the provided data to an AI model for analysis. 
-          Properly sanitizing sensitive data is crucial for compliance with data privacy regulations.
+          Your API traffic data is processed locally using pattern matching and rule-based analysis. 
+          No data is sent to external AI services. However, ensure sensitive information is 
+          appropriately masked or redacted <strong className="font-semibold">before submission</strong> 
+          for compliance with data privacy regulations.
         </AlertDescription>
       </Alert>
 

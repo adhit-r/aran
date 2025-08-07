@@ -13,7 +13,7 @@ import {
   ChartLegendContent,
 } from "@/components/ui/chart";
 import { LineChart, BarChart, PieChart, Pie, Cell, CartesianGrid, XAxis, YAxis, Tooltip as RechartsTooltip, Bar, Line, ResponsiveContainer } from "recharts";
-import { TrendingUp, Zap, AlertCircle, ShieldAlert, Timer, Activity, Percent, ArrowRight, CheckCircle, ShieldCheck, AlertTriangle, Network, Orbit, SlidersHorizontal, Users } from "lucide-react";
+import { TrendingUp, Zap, AlertCircle, ShieldAlert, Timer, Activity, Percent, ArrowRight, CheckCircle, ShieldCheck, AlertTriangle, Network, Orbit, SlidersHorizontal, Users, Atom, BookText, Siren } from "lucide-react";
 import type { ChartConfig } from "@/components/ui/chart";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -210,6 +210,19 @@ export default function DashboardPage() {
             <p><span className="font-medium text-foreground/80">User:</span> <span className="text-muted-foreground">{recentAnomaly.user}</span></p>
         </InsightCard>
         
+        <InsightCard 
+            title="Security Posture" 
+            icon={ShieldCheck} 
+            iconBgColor="bg-green-500/10 text-green-400" 
+            actionText="View Security Dashboard" 
+            onActionClick={() => { /* Navigate to security */ }}
+            className="xl:row-start-4"
+        >
+            <p><span className="font-medium text-foreground/80">Overall Score:</span> <Badge variant="default" className="bg-green-600">85/100</Badge></p>
+            <p><span className="font-medium text-foreground/80">Vulnerabilities:</span> <span className="text-muted-foreground">3 Critical, 7 High</span></p>
+            <p><span className="font-medium text-foreground/80">Compliance:</span> <Badge variant="outline">92%</Badge></p>
+        </InsightCard>
+
         <GlassCard className="lg:col-span-1 xl:col-span-1 p-5 xl:row-start-4">
             <CardHeader className="p-0 mb-3">
                 <CardTitle className="text-lg font-semibold text-foreground">Overall API Health</CardTitle>
