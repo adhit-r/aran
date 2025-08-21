@@ -7,10 +7,12 @@ export default function AppLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <SidebarNav />
-      <main className="flex-1 overflow-auto ml-64">
-        {children}
+      <main className="lg:ml-64 min-h-screen">
+        <div className="p-6">
+          {children}
+        </div>
       </main>
     </div>
   )

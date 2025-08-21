@@ -26,11 +26,7 @@
     "create:admin": "bun run --bun scripts/create-admin.ts",
     "create:collections:direct": "bun run --bun scripts/create-collections-direct.ts",
     "setup": "bun run --bun scripts/setup-complete.ts",
-        "setup:podman": "bun run --bun scripts/setup-podman.ts",
-    "setup:admin": "bun run --bun scripts/setup-pocketbase-admin.ts",
-    "setup:companies": "bun run --bun scripts/setup-companies.ts",
-    "create:admin": "bun run --bun scripts/create-admin.ts",
-    
+    "setup:podman": "bun run --bun scripts/setup-podman.ts",
     "db:migrate": "bun run --bun scripts/migrate-database.ts",
     "api:generate": "bun run --bun scripts/generate-api-client.ts",
     "security:scan": "bun run --bun scripts/security-scan.ts",
@@ -44,7 +40,9 @@
     "monitor:start": "bun run --bun scripts/monitor-start.ts",
     "monitor:stop": "bun run --bun scripts/monitor-stop.ts",
     "backup:create": "bun run --bun scripts/backup-create.ts",
-    "backup:restore": "bun run --bun scripts/backup-restore.ts"
+    "backup:restore": "bun run --bun scripts/backup-restore.ts",
+    "reorganize:dry-run": "bun run --bun scripts/migrate-structure.ts",
+    "reorganize:apply": "bun run --bun scripts/migrate-structure.ts --apply"
   },
   "dependencies": {
     "@hookform/resolvers": "^4.1.3",
@@ -95,7 +93,7 @@
   "devDependencies": {
     "@pandacss/dev": "^0.40.0",
     "@pandacss/preset-base": "^0.40.0",
-    "@tailwindcss/postcss": "4.1.11",
+    "@park-ui/panda-preset": "0.43.1",
     "@types/js-yaml": "^4.0.9",
     "@types/mime-types": "^2.1.4",
     "@types/node": "^20",
@@ -103,10 +101,10 @@
     "@types/react-dom": "^18",
     "@types/swagger-ui-react": "^5.0.0",
     "@types/uuid": "^9.0.8",
-    "autoprefixer": "10.4.21",
+    "autoprefixer": "10.4.19",
     "concurrently": "^9.2.0",
-    "postcss": "8.5.6",
-    "tailwindcss": "4.1.11",
+    "postcss": "8.4.38",
+    "tailwindcss": "3.4.14",
     "typescript": "^5"
   },
   "engines": {
