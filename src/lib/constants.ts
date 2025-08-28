@@ -128,30 +128,7 @@ export const NAV_ITEMS: readonly NavItem[] = [
     category: 'security',
     order: 2,
   },
-  {
-    title: 'MCP Security',
-    href: '/mcp-security',
-    icon: 'Lock',
-    description: 'Model Context Protocol security',
-    category: 'security',
-    order: 3,
-  },
-  {
-    title: 'MCP Discovery',
-    href: '/mcp-discovery',
-    icon: 'Globe',
-    description: 'Discover MCP tools',
-    category: 'security',
-    order: 4,
-  },
-  {
-    title: 'MCP Threats',
-    href: '/mcp-threats',
-    icon: 'Zap',
-    description: 'MCP threat analysis',
-    category: 'security',
-    order: 5,
-  },
+
 
   // Governance
   {

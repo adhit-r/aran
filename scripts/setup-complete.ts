@@ -310,7 +310,7 @@ async function completeSetup() {
         settings: {
           theme: 'light',
           timezone: 'UTC',
-          features: ['api-discovery', 'threat-detection', 'mcp-security']
+          features: ['api-discovery', 'threat-detection']
         },
         status: 'active'
       },
@@ -321,7 +321,7 @@ async function completeSetup() {
         settings: {
           theme: 'dark',
           timezone: 'America/New_York',
-          features: ['api-discovery', 'threat-detection', 'mcp-security', 'compliance']
+          features: ['api-discovery', 'threat-detection', 'compliance']
         },
         status: 'active'
       }

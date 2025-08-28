@@ -158,7 +158,7 @@ export class AIRouter {
   }
 
   public async analyzeThreat(input: {
-    type: 'api-anomaly' | 'mcp-threat' | 'security-scan'
+    type: 'api-anomaly' | 'security-scan'
     data: any
     context?: any
   }): Promise<AIAnalysisResult> {
