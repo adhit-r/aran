@@ -19,8 +19,8 @@ async function completeSetup() {
       // Create pocketbase directory
       execSync('mkdir -p pocketbase', { stdio: 'inherit' });
       
-      // Download PocketBase for macOS
-      const downloadUrl = 'https://github.com/pocketbase/pocketbase/releases/download/v0.22.6/pocketbase_0.22.6_darwin_amd64.zip';
+      // Download PocketBase for Linux
+      const downloadUrl = 'https://github.com/pocketbase/pocketbase/releases/download/v0.22.6/pocketbase_0.22.6_linux_amd64.zip';
       console.log('📥 Downloading PocketBase...');
       
       execSync(`curl -L ${downloadUrl} -o pocketbase.zip`, { stdio: 'inherit' });
@@ -59,52 +59,55 @@ async function completeSetup() {
     // Step 3: Create admin account
     console.log('\n👤 Step 3: Setting up admin account...');
     
+    // First, try to login to see if admin already exists
     try {
-      const adminResponse = await fetch('http://127.0.0.1:8090/api/admins', {
+      const loginCheck = await fetch('http://127.0.0.1:8090/api/admins/auth-with-password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email: process.env.POCKETBASE_ADMIN_EMAIL || 'admin@aran.com',
-          password: process.env.POCKETBASE_ADMIN_PASSWORD || 'admin123',
-          passwordConfirm: process.env.POCKETBASE_ADMIN_PASSWORD || 'admin123',
-          name: 'Admin User'
+          identity: process.env.POCKETBASE_ADMIN_EMAIL || 'admin@aran.com',
+          password: process.env.POCKETBASE_ADMIN_PASSWORD || 'admin123'
         })
       });
 
-      if (adminResponse.ok) {
-        console.log('✅ Admin account created');
+      if (loginCheck.ok) {
+        console.log('✅ Admin account already exists and login successful');
       } else {
-        const error = await adminResponse.json();
-        if (error.message?.includes('already exists')) {
-          console.log('✅ Admin account already exists');
-        } else {
-          console.log('⚠️ Admin creation failed (this is normal if admin exists)');
-        }
+        console.log('⚠️ Admin account not found or login failed');
+        console.log('📝 Please create the admin account manually:');
+        console.log('   1. Open http://127.0.0.1:8090/_/ in your browser');
+        console.log('   2. Create a new admin account with:');
+        console.log('      Email: admin@aran.com');
+        console.log('      Password: admin123');
+        console.log('   3. Press Enter when done...');
+        
+        // Wait for user input
+        process.stdin.once('data', () => {
+          console.log('✅ Continuing with setup...');
+        });
+        
+        // For now, we'll continue and let the user handle it
+        console.log('⚠️ Skipping admin creation - please create manually and run setup again');
+        return;
       }
     } catch (error) {
-      console.log('⚠️ Admin creation failed (this is normal if admin exists)');
+      console.log('⚠️ Admin login failed - please create admin account manually');
+      console.log('📝 Please create the admin account manually:');
+      console.log('   1. Open http://127.0.0.1:8090/_/ in your browser');
+      console.log('   2. Create a new admin account with:');
+      console.log('      Email: admin@aran.com');
+      console.log('      Password: admin123');
+      console.log('   3. Press Enter when done...');
+      return;
     }
 
     // Step 4: Login and create collections
     console.log('\n📝 Step 4: Creating collections...');
     
-    const loginResponse = await fetch('http://127.0.0.1:8090/api/admins/auth-with-password', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-              body: JSON.stringify({
-          identity: process.env.POCKETBASE_ADMIN_EMAIL || 'admin@aran.com',
-          password: process.env.POCKETBASE_ADMIN_PASSWORD || 'admin123'
-        })
-    });
-
-    if (!loginResponse.ok) {
-      throw new Error('Admin login failed');
-    }
-
+    // Use the login response from step 3
+    const loginResponse = loginCheck;
     const authData = await loginResponse.json();
     const token = authData.token;
     console.log('✅ Admin login successful');
