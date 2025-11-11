@@ -214,6 +214,22 @@ SMTP_PASSWORD=your-password
 | `bun run format` | Format code |
 | `bun run test` | Run tests |
 
+## Project Planning & Improvements
+
+This project tracks improvements and future development:
+
+- **[ROADMAP.md](./ROADMAP.md)** - Complete project roadmap with 22 phases of development
+- **[IMPROVEMENTS.md](./IMPROVEMENTS.md)** - Detailed analysis of 45+ improvement features across 8 categories
+- **[QUICK_WINS.md](./QUICK_WINS.md)** - High-impact, low-effort improvements (4 weeks of quick wins)
+- **[CONTRIBUTING.md](./CONTRIBUTING.md)** - Contribution guidelines
+
+### Current Focus
+- **Phase 15**: Testing & Quality Assurance (Unit, Integration, E2E tests)
+- **Phase 16**: Developer Experience (Documentation, tooling, automation)
+- **Phase 17**: Monitoring & Observability (Error tracking, logging, metrics)
+
+See [ROADMAP.md](./ROADMAP.md) for complete implementation plan.
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
