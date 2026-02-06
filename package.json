@@ -26,6 +26,7 @@
     "create:admin": "bun run --bun scripts/create-admin.ts",
     "create:collections:direct": "bun run --bun scripts/create-collections-direct.ts",
     "setup": "bun run --bun scripts/setup-complete.ts",
+    "setup:simple": "bun run --bun scripts/setup-simple.ts",
     "setup:podman": "bun run --bun scripts/setup-podman.ts",
     "db:migrate": "bun run --bun scripts/migrate-database.ts",
     "api:generate": "bun run --bun scripts/generate-api-client.ts",
